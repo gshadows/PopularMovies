@@ -1,5 +1,5 @@
 # Popular Movies
-(Student Project for [Android Developer Nanodegree](https://www.udacity.com/course/android-developer-nanodegree-by-google--nd801) in [Udacity](http://udacity.com)).
+Student Project for [Android Developer Nanodegree](https://www.udacity.com/course/android-developer-nanodegree-by-google--nd801) in [Udacity](http://udacity.com).
 
 ## Project Overview
 Allow user to list popular movies and look infromation about it.
@@ -8,8 +8,7 @@ The sort order can be by most popular, or by top rated.
 ## How to add an API key?
 API key is removed from project because it is illegal to share.
 1. You should obtain your own key at [this site](https://www.themoviedb.org/settings/api) (you need to create an account).
-2. Create new class Secret:
-   \app\src\main\java\com\example\popularmovies\Secrets.java
+2. Create new class Secret: **\app\src\main\java\com\example\popularmovies\Secrets.java**
 3. Class should look like this:
 ```java
 package com.example.popularmovies;
