@@ -1,0 +1,9 @@
+<resources>
+  
+  <!-- Application -->
+  <string name="app_name">PopularMovies</string>
+
+  <!-- Details activity -->
+  <string name="content_description_poster_preview">Movie poster preview</string>
+  
+</resources>

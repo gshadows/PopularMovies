@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="detail_head_text_size">32sp</dimen>
+    <dimen name="detail_head_vertical_size">100dp</dimen>
+    <dimen name="detail_head_margin_horizontal">16dp</dimen>
+    <dimen name="detail_head_margin_vertical">16dp</dimen>
+</resources>
