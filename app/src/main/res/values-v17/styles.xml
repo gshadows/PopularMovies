@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-  <style name="BigHeaderText" parent="BigHeaderTextBase">
-    <item name="android:layout_marginEnd">@dimen/detail_head_margin_horizontal</item>
-    <item name="android:layout_marginStart">@dimen/detail_head_margin_horizontal</item>
-  </style>
-  
-</resources>

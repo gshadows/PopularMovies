@@ -8,17 +8,20 @@
     <item name="colorAccent">@color/colorAccent</item>
   </style>
   
-  <style name="BigHeaderTextBase">
-    <item name="android:layout_width">0dp</item>
-    <item name="android:layout_height">@dimen/detail_head_vertical_size</item>
-    <item name="android:layout_marginTop">@dimen/detail_head_margin_vertical</item>
-    <item name="android:textSize">@dimen/detail_head_text_size</item>
-    <item name="android:gravity">center_vertical</item>
+  <style name="details_column">
+    <item name="android:textSize">@dimen/detail_column_text_size</item>
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:paddingLeft">32sp</item>
+    <item name="android:paddingTop">8sp</item>
   </style>
   
-  <style name="BigHeaderText" parent="BigHeaderTextBase">
-    <item name="android:layout_marginRight">@dimen/detail_head_margin_horizontal</item>
-    <item name="android:layout_marginLeft">@dimen/detail_head_margin_horizontal</item>
+  <style name="about_lines">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_marginLeft">16dp</item>
+    <item name="android:layout_marginTop">8dp</item>
+    <item name="android:layout_marginBottom">8dp</item>
   </style>
-
+  
 </resources>

@@ -8,18 +8,31 @@
   tools:context="com.example.popularmovies.DetailsActivity"
   >
 
-  <TextView
+  <TextViewCompat
     android:id="@+id/title_tv"
-    style="@style/BigHeaderText"
-    tools:text="Aliens II"
+    android:layout_width="0dp"
+    android:layout_height="@dimen/detail_head_vertical_size"
+    
+    android:paddingTop="@dimen/detail_head_margin_vertical"
+    android:paddingBottom="@dimen/detail_head_margin_vertical"
+    android:paddingLeft="@dimen/detail_head_margin_horizontal"
+    android:paddingRight="@dimen/detail_head_margin_horizontal"
+
+    android:background="@color/colorPrimaryDark"
+    android:gravity="center_vertical"
+    android:textSize="@dimen/detail_head_text_size"
+    android:autoSizeTextType="uniform"
+    tools:text="Nightmare on Elm Street"
+    
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintTop_toTopOf="parent"
     />
   
   <ImageView
-    android:layout_width="wrap_content"
-    android:layout_height="100dp"
+    android:id="@+id/poster_iv"
+    android:layout_width="152dp"
+    android:layout_height="192dp"
     android:contentDescription="@string/content_description_poster_preview"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@id/title_tv"
@@ -27,8 +40,39 @@
   
   <TextView
     android:id="@+id/year_tv"
+    style="@style/details_column"
+    android:textStyle="bold"
+    android:paddingTop="16dp"
+    tools:text="2014"
+    app:layout_constraintStart_toEndOf="@id/poster_iv"
+    app:layout_constraintTop_toBottomOf="@id/title_tv"
+    />
+  
+  <TextView
+    android:id="@+id/length_tv"
+    style="@style/details_column"
+    android:textStyle="italic"
+    tools:text="120 min"
+    app:layout_constraintStart_toEndOf="@id/poster_iv"
+    app:layout_constraintTop_toBottomOf="@id/year_tv"
+    />
+  
+  <TextView
+    android:id="@+id/rate_tv"
+    style="@style/details_column"
+    tools:text="8.5/10"
+    android:textSize="@dimen/detail_rate_text_size"
+    app:layout_constraintStart_toEndOf="@id/poster_iv"
+    app:layout_constraintTop_toBottomOf="@id/length_tv"
+    />
+  
+  <TextView
+    android:id="@+id/description_tv"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+    app:layout_constraintStart_toEndOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/poster_iv"
     />
   
 </android.support.constraint.ConstraintLayout>

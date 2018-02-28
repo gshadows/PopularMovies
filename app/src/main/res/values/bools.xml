@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  
+  <!-- DEFAULT APPLICATION SETTINGS -->
+  <bool name="displayPopulars">true</bool> <!-- Display popular movies (otherwise - top rated) -->
+  
+</resources>

@@ -1,9 +1,17 @@
 <resources>
-  
+
   <!-- Application -->
   <string name="app_name">PopularMovies</string>
 
   <!-- Details activity -->
   <string name="content_description_poster_preview">Movie poster preview</string>
   
+  <!-- About activity -->
+  <string name="about_author">Developed by the <b>Denis Andreev, 2018</b></string>
+  <string name="about_udacity">This is a student\'s project at <b>Udacity</b> <a href="https://www.udacity.com/course/android-developer-nanodegree-by-google--nd801">Android Developer Nanodegree course</a>.</string>
+  <string name="about_tmdb">This product uses the TMDb API but is not endorsed or certified by TMDb.</string>
+  <string name="top_rated">Top Rated</string>
+  <string name="popular">Popular</string>
+  <string name="about">About</string>
+
 </resources>
