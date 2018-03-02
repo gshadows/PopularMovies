@@ -23,7 +23,7 @@ public class Options implements SharedPreferences.OnSharedPreferenceChangeListen
   public boolean isTopRatedDisplayed() { return !mDisplayPopularList; }
 
 
-  private static Options mInstance;
+  private static volatile Options mInstance;
   private SharedPreferences mSharedPrefs;
 
 
@@ -32,16 +32,16 @@ public class Options implements SharedPreferences.OnSharedPreferenceChangeListen
    * @param context Context. Never saved inside. Pass null only if you sure instance was already created before.
    * @return Instance of Options class.
    */
-  public static Options getInstance (Context context) {
-    if (mInstance != null) return mInstance;
-    return mInstance = new Options(context);
+  public synchronized static Options getInstance (Context context) {
+    if (mInstance == null) synchronized (Options.class) { if (mInstance == null) mInstance = new Options(context); }
+    return mInstance;
   }
   
   
   // Private constructor.
   private Options (@NonNull Context context) {
     if (context == null) throw new IllegalArgumentException("Context could't be null");
-    SharedPreferences mSharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+    mSharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
     if (mSharedPrefs == null) {
       throw new UnknownError("Couldn't obtain shared preferences!");
     }

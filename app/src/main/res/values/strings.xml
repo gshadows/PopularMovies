@@ -13,5 +13,6 @@
   <string name="top_rated">Top Rated</string>
   <string name="popular">Popular</string>
   <string name="about">About</string>
+  <string name="fail_get_movies_list">Failed to fetch movies list from server</string>
 
 </resources>

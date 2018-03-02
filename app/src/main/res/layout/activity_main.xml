@@ -9,6 +9,14 @@
     android:id="@+id/movies_rv"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:visibility="invisible"
+    />
+  
+  <TextView
+    android:id="@+id/debug_json_tv"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="invisible"
     />
   
   <ProgressBar
