@@ -54,8 +54,8 @@ public class Options implements SharedPreferences.OnSharedPreferenceChangeListen
     
     reloadEverything(context);
   }
-
-
+  
+  
   /**
    * Reload all settings from the storage. Always called from the constructor.
    * @param context Context need to read default option if none was stored yet. Not saved inside.
@@ -65,11 +65,10 @@ public class Options implements SharedPreferences.OnSharedPreferenceChangeListen
     if (mSharedPrefs == null) throw new NullPointerException("Unexpected mSharedPrefs == null");
     
     Resources res = context.getResources();
-    boolean b = res.getBoolean(R.bool.displayPopulars);
     mDisplayPopularList = mSharedPrefs.getBoolean(KEY_DISPLAY_POPULARS, res.getBoolean(R.bool.displayPopulars));
   }
-
-
+  
+  
   /**
    * Change display settings.
    * @param isPopular true - display popular movies, false - display top rated.

@@ -1,6 +1,7 @@
 package com.example.popularmovies;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -42,12 +43,15 @@ public class MainActivity extends AppCompatActivity
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
     
+    // Detect screen orientation to decide on columns count.
+    boolean isLandscape = (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
+    
     // Find views.
     mRecyclerView = findViewById(R.id.movies_rv);
     mProgressBar = findViewById(R.id.movies_pb);
     
     // Setup RecyclerView.
-    GridLayoutManager layman = new GridLayoutManager(this, 2);
+    GridLayoutManager layman = new GridLayoutManager(this, isLandscape ? 3 : 2);
     mRecyclerView.setLayoutManager(layman);
     mAdapter = new MoviesListAdapter(this, this);
     mRecyclerView.setAdapter(mAdapter);
@@ -71,11 +75,17 @@ public class MainActivity extends AppCompatActivity
     super.onStop();
     mPageRequest.cancel(); // Stop fetching movies list from the network.
   }
-
-
+  
+  
+  private MenuItem mMenuItemPopular;
+  private MenuItem mMenuItemTopRated;
+  
   @Override
   public boolean onCreateOptionsMenu (final Menu menu) {
     getMenuInflater().inflate(R.menu.main, menu);
+    boolean bIsPopular = Options.getInstance(this).isPopularDisplayed();
+    mMenuItemPopular = menu.findItem(R.id.menu_popular).setChecked(bIsPopular);
+    mMenuItemTopRated = menu.findItem(R.id.menu_top_rated).setChecked(!bIsPopular);
     return true;
   }
 
@@ -88,10 +98,12 @@ public class MainActivity extends AppCompatActivity
         return true;
       case R.id.menu_popular:
         item.setChecked(true);
+        mMenuItemTopRated.setChecked(false);
         Options.getInstance(this).setPopularDisplayed(true);
         return true;
       case R.id.menu_top_rated:
         item.setChecked(true);
+        mMenuItemPopular.setChecked(false);
         Options.getInstance(this).setPopularDisplayed(false);
         return true;
     }
@@ -120,17 +132,14 @@ public class MainActivity extends AppCompatActivity
     Toast.makeText(this, "onResponse()", Toast.LENGTH_SHORT).show();
     
     mProgressBar.setVisibility(View.INVISIBLE);
-    mAdapter.setMovies(response.results);
-    //TODO: mRecyclerView.setVisibility(View.VISIBLE);
+    mAdapter.setMovies(response.results, null); // TODO: In stage 2 favorites should be read from DB.
+    mRecyclerView.setVisibility(View.VISIBLE);
     
     // Debug only!
     String res = "Page: " + response.page + "/" + response.total_pages + "\n"
       + "Results: " + response.results.length + "/" + response.total_results + "\n"
       + "First: " + ((response.results.length > 0) ? response.results[0].title : "-");
     Log.d(TAG, res);
-    android.widget.TextView debug = findViewById(R.id.debug_json_tv);
-    debug.setVisibility(View.VISIBLE);
-    debug.setText(res);
   }
 
 
@@ -140,8 +149,7 @@ public class MainActivity extends AppCompatActivity
    */
   @Override
   public void onClickItem (int item) {
-    Log.d(TAG, "onClickItem(): " + item);
-    Toast.makeText(this, "onClickItem(): " + item, Toast.LENGTH_SHORT).show();
+    startActivity(new Intent(this, DetailsActivity.class));
   }
   
   /**
@@ -150,7 +158,6 @@ public class MainActivity extends AppCompatActivity
    */
   @Override
   public void onClickStar (int item) {
-    Log.d(TAG, "onClickStar(): " + item);
-    Toast.makeText(this, "onClickStar(): " + item, Toast.LENGTH_SHORT).show();
+    mAdapter.switchFavorite(item);
   }
 }

@@ -6,14 +6,14 @@
   <item
     android:id="@+id/menu_top_rated"
     android:title="@string/top_rated"
-    android:icon="@android:drawable/star_big_on"
+    android:checkable="true"
     app:showAsAction="ifRoom"
     />
 
   <item
     android:id="@+id/menu_popular"
     android:title="@string/popular"
-    android:icon="@android:drawable/arrow_up_float"
+    android:checkable="true"
     app:showAsAction="ifRoom"
     />
 

@@ -1,20 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
   android:layout_width="match_parent"
-  android:layout_height="match_parent">
-  
+  android:layout_height="wrap_content"
+  >
+
   <ImageView
-    android:id="@+id/mini_poster"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    />
-  
-  <ImageButton
-    android:id="@+id/star_ib"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:icon="@android:drawable/star_big_on"
+    android:id="@+id/rv_item_poster"
+    android:layout_width="0dp"
+    android:layout_height="270dp"
+    android:scaleType="fitCenter"
+    android:adjustViewBounds="true"
+    
+    android:layout_margin="4dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    android:background="@color/colorPrimaryDark"
     />
 
+  <ImageButton
+    android:id="@+id/rv_item_star"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:src="@android:drawable/btn_star"
+    android:background="@null"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    />
+  
 </android.support.constraint.ConstraintLayout>
