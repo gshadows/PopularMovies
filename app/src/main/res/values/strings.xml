@@ -17,10 +17,10 @@
   <!-- Details activity -->
   <string name="fail_get_movie_info">Failed to fetch movie information from the server</string>
   <string name="content_description_poster_preview">Movie poster preview</string>
-  <string name="year">Year: </string>
-  <string name="rate">Rate: </string>
-  <string name="length">Length: </string>
-  <string name="minutes_short"> min</string>
+  <string name="year">Year:\ </string>
+  <string name="rate">Rate:\ </string>
+  <string name="length">Length:\ </string>
+  <string name="minutes_short">\ min</string>
   
   <!-- About activity -->
   <string name="about_author">Developed by <a href="mailto:denis.v.andreev@yandex.ru">Denis Andreev</a>, 2018</string>

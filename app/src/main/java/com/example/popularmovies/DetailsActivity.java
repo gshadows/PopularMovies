@@ -93,6 +93,7 @@ public class DetailsActivity extends AppCompatActivity
   private void showMinimalInfo() {
 
     // Set title.
+    setTitle(mMovieShort.title);
     mBinding.titleTv.setText(mMovieShort.title);
     
     // Start background image loading.
