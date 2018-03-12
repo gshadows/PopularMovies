@@ -24,6 +24,17 @@
     android:text="@string/about_udacity"
     />
   
+  <ImageView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="16dp"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:src="@drawable/tmdb_logo"
+    android:layout_gravity="center"
+    android:onClick="onTmdbLogoClick"
+    />
+  
   <TextView
     style="@style/about_lines"
     android:text="@string/about_tmdb"

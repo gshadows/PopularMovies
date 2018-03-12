@@ -1,7 +1,6 @@
 package com.example.popularmovies;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,7 +12,9 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import com.example.popularmovies.themoviedb.Api3;
 import com.example.popularmovies.themoviedb.TmdbMovieShort;
+import com.example.popularmovies.utils.Options;
 import com.squareup.picasso.Picasso;
 
 
@@ -33,8 +34,8 @@ public class MoviesListAdapter extends RecyclerView.Adapter<MoviesListAdapter.Vi
   private final OnClickListener mClickListener;
   
   //private Cursor mCursor;
-  private static TmdbMovieShort[] mMovies = null;
-  private static boolean[] mFavorites = null;
+  private TmdbMovieShort[] mMovies = null;
+  private boolean[] mFavorites = null; // TODO: Use set with movie IDs for Stage 2 (will be stored in DB).
 
 
   /**
@@ -62,6 +63,16 @@ public class MoviesListAdapter extends RecyclerView.Adapter<MoviesListAdapter.Vi
     notifyDataSetChanged();
   }
 
+
+  /**
+   * Return movie at sepcified positon.
+   * @param position Movie position.
+   * @return Movie.
+   */
+  public TmdbMovieShort getMovie(int position) {
+    return mMovies[position];
+  }
+  
 
   /**
    * Switch favorite flag for specified item.
@@ -106,17 +117,16 @@ public class MoviesListAdapter extends RecyclerView.Adapter<MoviesListAdapter.Vi
   public void onBindViewHolder (final MoviesListAdapter.ViewHolder holder, final int position) {
     
     // Set "favorite" star.
-    Log.d(TAG, "onBindViewHolder(" + position + ") fav = " + mFavorites[position]);
+    //Log.d(TAG, "onBindViewHolder(" + position + ") fav = " + mFavorites[position]);
     holder.mStarIB.setPressed(mFavorites[position]);
     
     // Prepare image URL.
-    String imageURL = "http://image.tmdb.org/t/p/w185//nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg";
-    //String imageURL = "http://image.tmdb.org/t/p/w185//nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg";
-    //String imageURL = "http://127.0.0.1/djkfhskhdf.jpg";
-    Log.d(TAG, "onBindViewHolder(" + position + ") image: " + imageURL);
+    String imageURL = Api3.getImageURL(mMovies[position].poster_path, Options.getInstance(mContext).getPostersPreviewResolution());
+    //Log.d(TAG, "onBindViewHolder(" + position + ") image: " + imageURL);
 
     // Load image.
     holder.mPosterIV.setColorFilter(0);
+    holder.mPosterIV.setContentDescription(mMovies[position].title);
     Picasso.with(mContext)
       .load(imageURL)
       .placeholder(android.R.drawable.progress_indeterminate_horizontal)
@@ -124,14 +134,12 @@ public class MoviesListAdapter extends RecyclerView.Adapter<MoviesListAdapter.Vi
       .into(holder.mPosterIV, new com.squareup.picasso.Callback() {
         @Override
         public void onSuccess () {
-          Log.d (TAG, "onBindViewHolder.Picasso.onSuccess(" + position + ")");
-          holder.mPosterIV.setContentDescription(mContext.getString(R.string.poster_content_description));
+          //Log.d (TAG, "onBindViewHolder.Picasso.onSuccess(" + position + ")");
         }
         @Override
         public void onError () {
-          Log.d (TAG, "onBindViewHolder.Picasso.onError(" + position + ")");
+          //Log.d (TAG, "onBindViewHolder.Picasso.onError(" + position + ")");
           holder.mPosterIV.setColorFilter(Color.RED);
-          holder.mPosterIV.setContentDescription(mContext.getString(R.string.poster_error_content_description));
         }
       });
   }

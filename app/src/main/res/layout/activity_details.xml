@@ -1,27 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
+<layout>
 <android.support.constraint.ConstraintLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/details_c_layout"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   tools:context="com.example.popularmovies.DetailsActivity"
   >
 
-  <TextView
-    android:id="@+id/title_tv"
+  <ImageView
+    android:id="@+id/back_image_iv"
+    tools:ignore="ContentDescription"
     android:layout_width="0dp"
     android:layout_height="@dimen/detail_head_vertical_size"
+    android:layout_margin="0dp"
     
-    android:paddingTop="@dimen/detail_head_margin_vertical"
-    android:paddingBottom="@dimen/detail_head_margin_vertical"
+    android:background="@null"
+    android:visibility="gone"
+    
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    />
+  
+  <TextView
+    android:id="@+id/title_tv"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:paddingLeft="@dimen/detail_head_margin_horizontal"
     android:paddingRight="@dimen/detail_head_margin_horizontal"
+    android:paddingTop="@dimen/detail_head_margin_vertical"
+    android:paddingBottom="@dimen/detail_head_margin_vertical"
 
-    android:background="@color/colorPrimaryDark"
-    android:gravity="center_vertical"
+    android:background="#80000000"
+    android:gravity="center"
     android:textSize="@dimen/detail_head_text_size"
-    android:autoSizeTextType="uniform"
+    android:textColor="@color/colorText"
+    
     tools:text="Nightmare on Elm Street"
     
     app:layout_constraintStart_toStartOf="parent"
@@ -33,7 +50,12 @@
     android:id="@+id/poster_iv"
     android:layout_width="152dp"
     android:layout_height="192dp"
+    android:layout_marginTop="12dp"
     android:contentDescription="@string/content_description_poster_preview"
+    
+    tools:background="@android:color/black"
+    android:background="@null"
+    
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@id/title_tv"
     />
@@ -43,7 +65,7 @@
     style="@style/details_column"
     android:textStyle="bold"
     android:paddingTop="16dp"
-    tools:text="2014"
+    tools:text="Year: 2014"
     app:layout_constraintStart_toEndOf="@id/poster_iv"
     app:layout_constraintTop_toBottomOf="@id/title_tv"
     />
@@ -52,7 +74,7 @@
     android:id="@+id/length_tv"
     style="@style/details_column"
     android:textStyle="italic"
-    tools:text="120 min"
+    tools:text="Length: 120 min"
     app:layout_constraintStart_toEndOf="@id/poster_iv"
     app:layout_constraintTop_toBottomOf="@id/year_tv"
     />
@@ -60,7 +82,7 @@
   <TextView
     android:id="@+id/rate_tv"
     style="@style/details_column"
-    tools:text="8.5/10"
+    tools:text="Rate: 8.5/10"
     android:textSize="@dimen/detail_rate_text_size"
     app:layout_constraintStart_toEndOf="@id/poster_iv"
     app:layout_constraintTop_toBottomOf="@id/length_tv"
@@ -70,9 +92,12 @@
     android:id="@+id/description_tv"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-    app:layout_constraintStart_toEndOf="parent"
+    android:paddingTop="12dp"
+    tools:text="    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintTop_toBottomOf="@id/poster_iv"
     />
   
 </android.support.constraint.ConstraintLayout>
+</layout>

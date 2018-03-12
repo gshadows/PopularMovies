@@ -17,6 +17,7 @@ public class Api3 {
   private static final String TAG = Api3.class.getSimpleName();
   
   private static final String DEFAULT_BASE_ADDRESS = "https://api.themoviedb.org/3";
+  private static final String DEFAULT_IMAGES_PATH  = "http://image.tmdb.org/t/p/w";
   
   private static final String REQ_MOVIES_POPULER   = "/movie/popular";
   private static final String REQ_MOVIES_TOP_RATED = "/movie/top_rated";
@@ -68,6 +69,21 @@ public class Api3 {
   }
   public Request<TmdbMoviesPage> requireTopRatedMovies (int page, Response.Listener<TmdbMoviesPage> listener, Response.ErrorListener errorListener) {
     return mRequestQueue.add(new GsonRequest<> (getURL_TopRatedMovies(page), TmdbMoviesPage.class, listener, errorListener));
+  }
+  public Request<TmdbMovieDetails> requireMovieDetails (int movieId, Response.Listener<TmdbMovieDetails> listener, Response.ErrorListener errorListener) {
+    return mRequestQueue.add(new GsonRequest<> (getURL_MovieDetails(movieId), TmdbMovieDetails.class, listener, errorListener));
+  }
+
+
+  /**
+   * Construct image URL for specified image name.
+   * This URL valid both for posters (poster_path) and backgrounds (backdrop_path).
+   * @param imageName Image name with from poster_path, backdrop_path or other source.
+   * @param width Desired image width (use only predefined widths!).
+   * @return Constructed image URL.
+   */
+  public static String getImageURL (String imageName, int width) {
+    return String.format("%s%d/%s", DEFAULT_IMAGES_PATH, width, imageName);
   }
 
 

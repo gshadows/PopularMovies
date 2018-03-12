@@ -6,14 +6,12 @@
   <item
     android:id="@+id/menu_top_rated"
     android:title="@string/top_rated"
-    android:checkable="true"
     app:showAsAction="ifRoom"
     />
 
   <item
     android:id="@+id/menu_popular"
     android:title="@string/popular"
-    android:checkable="true"
     app:showAsAction="ifRoom"
     />
 
