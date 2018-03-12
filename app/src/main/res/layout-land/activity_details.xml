@@ -11,17 +11,34 @@
   >
 
   <ImageView
+    android:id="@+id/poster_iv"
+    android:layout_width="158dp"
+    android:layout_height="200dp"
+    android:contentDescription="@string/content_description_poster_preview"
+
+    tools:background="@android:color/black"
+    android:background="@null"
+
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="parent"
+    />
+
+  <ImageView
     android:id="@+id/back_image_iv"
     tools:ignore="ContentDescription"
     android:layout_width="0dp"
     android:layout_height="@dimen/detail_head_vertical_size"
     android:layout_margin="0dp"
-    
+    android:layout_marginStart="12dp"
+    android:layout_marginLeft="12dp"
+
     android:background="@null"
     android:visibility="gone"
-    
-    app:layout_constraintStart_toStartOf="parent"
+
+    app:layout_constraintStart_toEndOf="@id/poster_iv"
+    app:layout_constraintLeft_toRightOf="@id/poster_iv"
     app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
     app:layout_constraintTop_toTopOf="parent"
     />
   
@@ -34,39 +51,27 @@
     android:paddingTop="@dimen/detail_head_margin_vertical"
     android:paddingBottom="@dimen/detail_head_margin_vertical"
 
-    android:background="@color/half_transparent"
+    android:background="#80000000"
     android:gravity="center"
     android:textSize="@dimen/detail_head_text_size"
     android:textColor="@color/colorText"
     
     tools:text="Nightmare on Elm Street"
     
-    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintStart_toEndOf="@id/poster_iv"
+    app:layout_constraintLeft_toRightOf="@id/poster_iv"
     app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
     app:layout_constraintTop_toTopOf="parent"
-    />
-  
-  <ImageView
-    android:id="@+id/poster_iv"
-    android:layout_width="158dp"
-    android:layout_height="200dp"
-    android:layout_marginTop="8dp"
-    android:layout_marginStart="8dp"
-    android:layout_marginLeft="8dp"
-    android:contentDescription="@string/content_description_poster_preview"
-    
-    tools:background="@android:color/black"
-    android:background="@null"
-    
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/title_tv"
     />
   
   <TextView
     android:id="@+id/year_tv"
     style="@style/details_column"
     android:textStyle="bold"
-    android:paddingTop="16dp"
+    android:layout_marginTop="8dp"
+    android:padding="8dp"
+    android:background="@color/half_transparent"
     tools:text="Year: 2014"
     app:layout_constraintStart_toEndOf="@id/poster_iv"
     app:layout_constraintTop_toBottomOf="@id/title_tv"
@@ -76,6 +81,8 @@
     android:id="@+id/length_tv"
     style="@style/details_column"
     android:textStyle="italic"
+    android:padding="8dp"
+    android:background="@color/half_transparent"
     tools:text="Length: 120 min"
     app:layout_constraintStart_toEndOf="@id/poster_iv"
     app:layout_constraintTop_toBottomOf="@id/year_tv"
@@ -85,6 +92,8 @@
     android:id="@+id/rate_tv"
     style="@style/details_column"
     tools:text="Rate: 8.5/10"
+    android:padding="8dp"
+    android:background="@color/half_transparent"
     android:textSize="@dimen/detail_rate_text_size"
     app:layout_constraintStart_toEndOf="@id/poster_iv"
     app:layout_constraintTop_toBottomOf="@id/length_tv"

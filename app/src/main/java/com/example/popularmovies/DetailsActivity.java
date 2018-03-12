@@ -1,6 +1,7 @@
 package com.example.popularmovies;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.support.constraint.ConstraintLayout;
@@ -38,11 +39,16 @@ public class DetailsActivity extends AppCompatActivity
   private Api3 api3;
   private Request<TmdbMovieDetails> mDetailsRequest = null;
   
+  private boolean mIsLandscape;
+  
 
   @Override
   protected void onCreate (Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     mBinding = DataBindingUtil.setContentView(this, R.layout.activity_details);
+
+    // Detect screen orientation to decide on columns count.
+    mIsLandscape = (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
     
     // Read and display base information from the Intent.
     if (!readIntentMovieExtra()) {
@@ -111,13 +117,15 @@ public class DetailsActivity extends AppCompatActivity
             
             // Enable background.
             mBinding.backImageIv.setVisibility(View.VISIBLE);
-            // Re-bind title text to the bottom of background image.
-            ConstraintLayout layout = findViewById(R.id.details_c_layout);
-            ConstraintSet constraints = new ConstraintSet();
-            constraints.clone(layout);
-            constraints.connect(R.id.title_tv, ConstraintSet.BOTTOM, R.id.back_image_iv, ConstraintSet.BOTTOM);
-            constraints.clear(R.id.title_tv, ConstraintSet.TOP);
-            constraints.applyTo(layout);
+            if (!mIsLandscape) {
+              // Re-bind title text to the bottom of background image. Only for portrait orientation.
+              ConstraintLayout layout = findViewById(R.id.details_c_layout);
+              ConstraintSet constraints = new ConstraintSet();
+              constraints.clone(layout);
+              constraints.connect(R.id.title_tv, ConstraintSet.BOTTOM, R.id.back_image_iv, ConstraintSet.BOTTOM);
+              constraints.clear(R.id.title_tv, ConstraintSet.TOP);
+              constraints.applyTo(layout);
+            }
           }
           @Override public void onError () {} // When no background loaded title is bound to the top of screen.
         });
