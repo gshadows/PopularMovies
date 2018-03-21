@@ -42,7 +42,7 @@ public class Api3 {
     
     // Prepare Volley.
     if (mRequestQueue == null) {
-      //TODO: Volley not accessible in unit tests :( Comment next line to run tests. Move to separate class?
+      //TODO: Volley not accessible in unit tests :( Comment next line to run tests. Need to read more about testing.
       mRequestQueue = Volley.newRequestQueue(context.getApplicationContext());
     }
   }

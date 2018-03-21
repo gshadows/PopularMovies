@@ -36,8 +36,8 @@ public class MoviesListAdapter extends RecyclerView.Adapter<MoviesListAdapter.Vi
   //private Cursor mCursor;
   private TmdbMovieShort[] mMovies = null;
   private boolean[] mFavorites = null; // TODO: Use set with movie IDs for Stage 2 (will be stored in DB).
-
-
+  
+  
   /**
    * Constructor
    * @param context Context.
@@ -63,7 +63,7 @@ public class MoviesListAdapter extends RecyclerView.Adapter<MoviesListAdapter.Vi
     notifyDataSetChanged();
   }
 
-
+  
   /**
    * Return movie at sepcified positon.
    * @param position Movie position.

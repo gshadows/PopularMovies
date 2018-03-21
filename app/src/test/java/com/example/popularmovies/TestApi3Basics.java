@@ -1,17 +1,21 @@
 package com.example.popularmovies;
 
+import android.test.mock.MockContext;
+
 import com.example.popularmovies.themoviedb.Api3;
 
 import org.junit.Before;
 import org.junit.Test;
-
+import org.mockito.Mock;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
 
 
 public class TestApi3Basics {
   
   private MockContext mContext;
+  //private @Mock android.content.Context mContext = mock(android.content.Context.class);
   private Api3 mApi3;
   
   
