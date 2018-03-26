@@ -16,7 +16,7 @@ import com.example.popularmovies.R;
 public class Options implements SharedPreferences.OnSharedPreferenceChangeListener {
   
   // Preference access keys.
-  private static final String KEY_DISPLAY_POPULARS = "popular";
+  private static final String KEY_CURRENT_TAB         = "cur_tab";
   private static final String KEY_POSTERS_PREVIEW_RES = "post_pre_res";
   private static final String KEY_POSTERS_DETAILS_RES = "post_det_res";
   private static final String KEY_BACKGROUND_RES      = "back_res";
@@ -25,8 +25,13 @@ public class Options implements SharedPreferences.OnSharedPreferenceChangeListen
   private SharedPreferences mSharedPrefs;
   
   
+  public enum CurrentTab {
+    FAVORITES, POPULAR, TOP_RATED
+  };
+  
+  
   /** Determines movies list sort order: true - popular, false - top rated. */
-  private boolean mDisplayPopularList;
+  private CurrentTab mCurrentTab;
   
   /** Determines posters preview image resolution for main activity. */
   private int mPostersPreviewResolution;
@@ -39,8 +44,7 @@ public class Options implements SharedPreferences.OnSharedPreferenceChangeListen
 
   
   // Getters collection :)
-  public boolean isPopularDisplayed()  { return  mDisplayPopularList; }
-  public boolean isTopRatedDisplayed() { return !mDisplayPopularList; }
+  public CurrentTab getCurrentTab()        { return mCurrentTab; }
   public int getPostersPreviewResolution() { return mPostersPreviewResolution; }
   public int getPostersDetailsResolution() { return mPostersDetailsResolution; }
   public int getBackgroundResolution()     { return mBackgroundResolution;     }
@@ -55,7 +59,7 @@ public class Options implements SharedPreferences.OnSharedPreferenceChangeListen
     if (mSharedPrefs == null) throw new NullPointerException("Unexpected mSharedPrefs == null");
     
     Resources res = context.getResources();
-    mDisplayPopularList = mSharedPrefs.getBoolean(KEY_DISPLAY_POPULARS, res.getBoolean(R.bool.displayPopulars));
+    mCurrentTab = CurrentTab.valueOf(mSharedPrefs.getString(KEY_CURRENT_TAB, res.getString(R.string.defaultStartTab)));
     mPostersPreviewResolution = mSharedPrefs.getInt(KEY_POSTERS_PREVIEW_RES, res.getInteger(R.integer.postersPreviewResolution));
     mPostersDetailsResolution = mSharedPrefs.getInt(KEY_POSTERS_DETAILS_RES, res.getInteger(R.integer.postersDetailsResolution));
     mBackgroundResolution = mSharedPrefs.getInt(KEY_BACKGROUND_RES, res.getInteger(R.integer.backgroundResolution));
@@ -63,14 +67,15 @@ public class Options implements SharedPreferences.OnSharedPreferenceChangeListen
 
 
   /**
-   * @param isPopular true - display popular movies, false - display top rated.
+   * Change currently selected tab in MainActivity.
+   * @param tab Currently selected tab.
    */
-  public void setPopularDisplayed (boolean isPopular) {
-    if (isPopular == mDisplayPopularList) return; // No change here.
+  public void setCurrentTab (CurrentTab tab) {
+    if (tab == mCurrentTab) return; // No change here.
     mSharedPrefs.edit()
-      .putBoolean (KEY_DISPLAY_POPULARS, isPopular)
+      .putString (KEY_CURRENT_TAB, tab.name())
       .apply();
-    mDisplayPopularList = isPopular;
+    mCurrentTab = tab;
   }
 
 
@@ -144,8 +149,14 @@ public class Options implements SharedPreferences.OnSharedPreferenceChangeListen
 
   @Override
   public void onSharedPreferenceChanged (SharedPreferences sharedPreferences, String key) {
-    if (key.equals(KEY_DISPLAY_POPULARS)) {
-      mDisplayPopularList = sharedPreferences.getBoolean(key, mDisplayPopularList);
+    if (key.equals(KEY_CURRENT_TAB)) {
+      mCurrentTab = CurrentTab.valueOf(sharedPreferences.getString(key, mCurrentTab.name()));
+    } else if (key.equals(KEY_POSTERS_PREVIEW_RES)) {
+      mPostersPreviewResolution = mSharedPrefs.getInt(KEY_POSTERS_PREVIEW_RES, mPostersPreviewResolution);
+    } else if (key.equals(KEY_POSTERS_DETAILS_RES)) {
+      mPostersDetailsResolution = mSharedPrefs.getInt(KEY_POSTERS_DETAILS_RES, mPostersDetailsResolution);
+    } else if (key.equals(KEY_BACKGROUND_RES)) {
+      mBackgroundResolution = mSharedPrefs.getInt(KEY_BACKGROUND_RES, mBackgroundResolution);
     }
   }
 }

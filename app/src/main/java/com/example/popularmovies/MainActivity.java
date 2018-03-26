@@ -58,8 +58,8 @@ public class MainActivity extends AppCompatActivity
     mRecyclerView.setHasFixedSize(true); // All posters assumed to be same size.
 
     // Change activity title.
-    boolean isPopular = Options.getInstance(this).isPopularDisplayed();
-    setDynamicTitle(isPopular);
+    Options.CurrentTab currentTab = Options.getInstance(this).getCurrentTab();
+    setDynamicTitle(currentTab);
     
     // Begin network request.
     api3 = new Api3(Secrets.THEMOVIEDB_API_KEY, this);
@@ -80,10 +80,15 @@ public class MainActivity extends AppCompatActivity
 
 
   private void requireMovies() {
-    if (Options.getInstance(MainActivity.this).isPopularDisplayed()) {
-      mPageRequest = api3.requirePopularMovies(mCurrentPage, this, this);
-    } else {
-      mPageRequest =  api3.requireTopRatedMovies(mCurrentPage, this, this);
+    switch (Options.getInstance(MainActivity.this).getCurrentTab()) {
+      case FAVORITES:
+        break;
+      case POPULAR:
+        mPageRequest = api3.requirePopularMovies(mCurrentPage, this, this);
+        break;
+      case TOP_RATED:
+        mPageRequest =  api3.requireTopRatedMovies(mCurrentPage, this, this);
+        break;
     }
     mSwipeRL.setRefreshing(true);
   }
@@ -99,8 +104,8 @@ public class MainActivity extends AppCompatActivity
   /**
    * Set activity title based on sort order: Popular or Top Rated movies.
    */
-  private void setDynamicTitle (boolean isPopular) {
-    setTitle(isPopular ? getString(R.string.popular_movies) : getString(R.string.top_rated_movies));
+  private void setDynamicTitle (Options.CurrentTab currentTab) {
+    setTitle(currentTab.toString());
   }
 
 
@@ -111,13 +116,13 @@ public class MainActivity extends AppCompatActivity
         startActivity(new Intent(this, AboutActivity.class));
         return true;
       case R.id.menu_popular:
-        Options.getInstance(this).setPopularDisplayed(true);
-        setDynamicTitle(true);
+        Options.getInstance(this).setCurrentTab(Options.CurrentTab.POPULAR);
+        setDynamicTitle(Options.CurrentTab.POPULAR);
         requireMovies();
         return true;
       case R.id.menu_top_rated:
-        Options.getInstance(this).setPopularDisplayed(false);
-        setDynamicTitle(false);
+        Options.getInstance(this).setCurrentTab(Options.CurrentTab.TOP_RATED);
+        setDynamicTitle(Options.CurrentTab.TOP_RATED);
         requireMovies();
         return true;
     }

@@ -2,9 +2,10 @@
 <resources>
   
   <!-- DEFAULT APPLICATION SETTINGS -->
-  <bool name="displayPopulars">true</bool>  <!-- Display popular movies (otherwise - top rated). -->
+  <string name="defaultStartTab">FAVORITES</string>      <!-- Default start tab for Main Activity. -->
+  <!-- Loading image resolutions -->
   <integer name="postersPreviewResolution">185</integer> <!-- Posters preview image resolution for main activity. -->
   <integer name="postersDetailsResolution">185</integer> <!-- Posters details image resolution for details activity. -->
-  <integer name="backgroundResolution">342</integer>     <!-- DPosters details image resolution for details activity. -->
+  <integer name="backgroundResolution">342</integer>     <!-- Posters details image resolution for details activity. -->
   
 </resources>
