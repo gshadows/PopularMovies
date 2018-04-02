@@ -23,6 +23,9 @@ public class Api3 {
   private static final String REQ_MOVIES_TOP_RATED = "/movie/top_rated";
   private static final String REQ_MOVIE_DETAILS    = "/movie";
   
+  private static final String SUB_MOVIE_REVIEWS    = "/reviews";
+  private static final String SUB_MOVIE_VIDEOS     = "/videos";
+  
   private String mApiKey;
   private RequestQueue mRequestQueue = null;
   
@@ -62,6 +65,14 @@ public class Api3 {
   public String getURL_MovieDetails (int movieId) {
     return String.format ("%s%s/%d?api_key=%s", DEFAULT_BASE_ADDRESS, REQ_MOVIE_DETAILS, movieId, mApiKey);
   }
+  @SuppressLint("DefaultLocale")
+  public String getURL_MovieReviews (int movieId, int page) {
+    return String.format ("%s%s/%d%s?api_key=%s&page=%d", DEFAULT_BASE_ADDRESS, REQ_MOVIE_DETAILS, movieId, SUB_MOVIE_REVIEWS, mApiKey, page);
+  }
+  @SuppressLint("DefaultLocale")
+  public String getURL_MovieVideos (int movieId, int page) {
+    return String.format ("%s%s/%d%s?api_key=%s&page=%d", DEFAULT_BASE_ADDRESS, REQ_MOVIE_DETAILS, movieId, SUB_MOVIE_VIDEOS, mApiKey, page);
+  }
   
   
   public Request<TmdbMoviesPage> requirePopularMovies (int page, Response.Listener<TmdbMoviesPage> listener, Response.ErrorListener errorListener) {
@@ -72,6 +83,12 @@ public class Api3 {
   }
   public Request<TmdbMovieDetails> requireMovieDetails (int movieId, Response.Listener<TmdbMovieDetails> listener, Response.ErrorListener errorListener) {
     return mRequestQueue.add(new GsonRequest<> (getURL_MovieDetails(movieId), TmdbMovieDetails.class, listener, errorListener));
+  }
+  public Request<TmdbReviewsPage> requireMovieReviews (int movieId, int page, Response.Listener<TmdbReviewsPage> listener, Response.ErrorListener errorListener) {
+    return mRequestQueue.add(new GsonRequest<> (getURL_MovieReviews(movieId, page), TmdbReviewsPage.class, listener, errorListener));
+  }
+  public Request<TmdbVideosPage> requireMovieVideos (int movieId, int page, Response.Listener<TmdbVideosPage> listener, Response.ErrorListener errorListener) {
+    return mRequestQueue.add(new GsonRequest<> (getURL_MovieVideos(movieId, page), TmdbVideosPage.class, listener, errorListener));
   }
 
 
