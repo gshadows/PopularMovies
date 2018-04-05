@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical"
+  tools:context=".ReadReviewActivity"
+  >
+  
+  <TextView
+    android:id="@+id/author_tv"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:textColor="@color/colorAccent"
+    android:textSize="20sp"
+    tools:text="Unnamed Reviewer"
+    />
+  
+  <ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    
+    <TextView
+      android:id="@+id/review_tv"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:textColor="@color/colorPrimaryLight"
+      android:textSize="16sp"
+      tools:text="Darkness is coming. All human being are sheltered deep under ground. All but one. His name is unknown. His face are hidden under the hood. But his eyes shining like an emerald terrifying the evil. The battle will start soon."
+      />
+  
+  </ScrollView>
+</LinearLayout>

@@ -13,7 +13,6 @@
     android:theme="@style/AppTheme"
     >
     
-    
     <activity
       android:name=".MainActivity"
       android:launchMode="singleTop"
@@ -24,28 +23,27 @@
       </intent-filter>
     </activity>
     
-    
     <activity
       android:name=".DetailsActivity"
-      android:parentActivityName=".MainActivity"
-      >
-      <meta-data
-        android:name="android.support.PARENT_ACTIVITY"
-        android:value=".MainActivity"
-        />
+      android:parentActivityName=".MainActivity">
+      <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
     </activity>
     
+    <activity android:name=".AboutActivity">
+    </activity>
     
     <activity
-      android:name=".AboutActivity"
-      android:parentActivityName=".MainActivity"
-      >
-      <meta-data
-        android:name="android.support.PARENT_ACTIVITY"
-        android:value=".MainActivity"
-        />
+      android:name=".ReviewsActivity"
+      android:parentActivityName=".DetailsActivity">
+      <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".DetailsActivity"/>
     </activity>
     
+    <activity
+      android:name=".ReadReviewActivity"
+      android:parentActivityName=".ReviewsActivity">
+      <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".ReviewsActivity"/>
+    </activity>
     
   </application>
+
 </manifest>

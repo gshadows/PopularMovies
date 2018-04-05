@@ -1,5 +1,5 @@
 <resources>
-
+  
   <!-- Application -->
   <string name="app_name">PopularMovies</string>
   
@@ -7,7 +7,7 @@
   <string name="top_rated">Top</string>
   <string name="popular">Pop</string>
   <string name="about">About</string>
-
+  
   <!-- Main activity -->
   <string name="fail_get_movies_list">Failed to fetch movies list from the server</string>
   <string name="popular_movies">Popular Movies</string>
@@ -22,6 +22,12 @@
   <string name="length">Length:\ </string>
   <string name="minutes_short">\ min</string>
   
+  <!-- Reviews activity -->
+  <string name="reviews">Reviews</string>
+  
+  <!-- Videos activity -->
+  <string name="videos">Videos</string>
+  
   <!-- About activity -->
   <string name="about_author">Developed by <a href="mailto:denis.v.andreev@yandex.ru">Denis Andreev</a>, 2018</string>
   <string name="about_udacity">This is a student\'s project at <a href="https://www.udacity.com/course/android-developer-nanodegree-by-google--nd801">Android Developer Nanodegree</a> course by <b>Udacity</b>.</string>
@@ -30,7 +36,7 @@
   <!-- Content descriptions -->
   <string name="poster_content_description">Poster image</string>
   <string name="poster_error_content_description">Poster loading failed</string>
-
+  
   <!-- Other strings -->
   <string name="tmdb_url">https://www.themoviedb.org</string>
 

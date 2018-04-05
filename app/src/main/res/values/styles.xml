@@ -25,4 +25,13 @@
     <item name="android:linksClickable">true</item>
   </style>
   
+  <style name="Splitter">
+    <item name="android:layout_centerHorizontal">true</item>
+    <item name="android:layout_width">300dp</item>
+    <item name="android:layout_height">4dp</item>
+    <item name="android:layout_marginTop">10dp</item>
+    <item name="android:layout_marginBottom">10dp</item>
+    <item name="android:background">@color/colorPrimaryDark</item>
+  </style>
+  
 </resources>

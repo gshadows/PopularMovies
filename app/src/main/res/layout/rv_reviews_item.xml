@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:orientation="vertical"
+  android:padding="4dp"
+  >
+  
+  <TextView
+    android:id="@+id/author_tv"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:textStyle="bold"
+    android:textSize="20sp"
+    android:gravity="center_horizontal"
+    tools:text="NorthenReviewer1234"
+    />
+
+  <TextView
+    android:id="@+id/review_tv"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:textSize="20sp"
+    tools:text="Nobody knows, but our world balancing on the edge of the Darkness. Only true mage could return stolen relic of ..."
+    />
+  
+  <View style="@style/Splitter"/>
+
+</LinearLayout>

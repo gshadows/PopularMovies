@@ -74,19 +74,22 @@ public class DetailsActivity extends AppCompatActivity
   private void requireMovieDetails() {
     mDetailsRequest = api3.requireMovieDetails(mMovieShort.id, this, this);
   }
-
-
+  
+  
+  /**
+   * Attempt to obtain activity parameters from the intent.
+   * @return True on success, false otherwise.
+   */
   private boolean readIntentMovieExtra() {
     Intent intent = getIntent();
-    if ((intent == null) || !intent.hasExtra(EXTRA_MOVIE)) {
-      Log.e(TAG, "No movie intent passed");
+    if (intent == null) {
+      Log.e(TAG, "No intent passed");
       return false;
     }
-    try {
-      mMovieShort = intent.getParcelableExtra(EXTRA_MOVIE);
-    }
-    catch (ClassCastException ex) {
-      Log.e(TAG, "Bad parcelable passed: " + ex.getMessage());
+    // Get parcelable movie short information object.
+    mMovieShort = intent.getParcelableExtra(EXTRA_MOVIE);
+    if (mMovieShort == null) {
+      Log.e(TAG, "Bad parcelable passed");
       return false;
     }
     return true;
@@ -191,7 +194,28 @@ public class DetailsActivity extends AppCompatActivity
     mMovieDetails = response;
     showDetailedInfo();
   }
-
-
-
+  
+  
+  /**
+   * "Reviews" button click handler.
+   * @param view Unused.
+   */
+  public void onReviewsClick (View view) {
+    Intent intent = new Intent(this, ReviewsActivity.class);
+    intent.putExtra(ReviewsActivity.EXTRA_MOVIE_TITLE, mMovieShort.title);
+    intent.putExtra(ReviewsActivity.EXTRA_MOVIE_ID,    mMovieShort.id);
+    startActivity(intent);
+  }
+  
+  
+  /**
+   * "Videos" button click handler.
+   * @param view Unused.
+   */
+  public void onVideosClick (View view) {
+    /*Intent intent = new Intent(this, VideosActivity.class);
+    intent.putExtra(VideosActivity.EXTRA_MOVIE_TITLE, mMovieShort.title);
+    intent.putExtra(VideosActivity.EXTRA_MOVIE_ID,    mMovieShort.id);
+    startActivity(intent);*/
+  }
 }

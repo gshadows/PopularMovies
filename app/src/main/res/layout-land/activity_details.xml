@@ -99,6 +99,26 @@
     app:layout_constraintTop_toBottomOf="@id/length_tv"
     />
   
+  <Button
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="@string/reviews"
+    android:paddingTop="8dp"
+    android:onClick="onReviewsClick"
+    app:layout_constraintStart_toEndOf="@id/poster_iv"
+    app:layout_constraintTop_toBottomOf="@id/rate_tv"
+    />
+  
+  <Button
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="@string/videos"
+    android:paddingTop="8dp"
+    android:onClick="onVideosClick"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/rate_tv"
+    />
+  
   <TextView
     android:id="@+id/description_tv"
     android:layout_width="wrap_content"
