@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity
   @Override
   protected void onCreate (final Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_main);
+    setContentView(R.layout.activity_with_recyclerview);
     
     // TODO: Restore RV position after screen rotation!
     
@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity
     boolean isLandscape = (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
     
     // Find views.
-    mRecyclerView = findViewById(R.id.movies_rv);
+    mRecyclerView = findViewById(R.id.main_recyclerview);
     mSwipeRL = findViewById(R.id.main_swipe_layout);
     
     // Setup RecyclerView.

@@ -42,7 +42,7 @@ public class VideosActivity extends AppCompatActivity
     @Override
     protected void onCreate (Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-      setContentView(R.layout.activity_main); // Absolutely same layout: SwipeLayout + RecyclerView.
+      setContentView(R.layout.activity_with_recyclerview);
       setTitle(getString(R.string.videos));
       
       // Obtain movie ID etc.
@@ -52,7 +52,7 @@ public class VideosActivity extends AppCompatActivity
       }
       
       // Find views.
-      mRecyclerView = findViewById(R.id.movies_rv);
+      mRecyclerView = findViewById(R.id.main_recyclerview);
       mSwipeRL = findViewById(R.id.main_swipe_layout);
       
       // Setup RecyclerView.

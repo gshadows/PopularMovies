@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  This is a generic layout for all activities with the single RecyclerView.
+  Currently in this app such RV-only layout used by: Main, Reviews and Videos activities.
+  All of them uses absolutely identical layout, but with different RecyclerView item layouts.
+-->
 <android.support.v4.widget.SwipeRefreshLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:tools="http://schemas.android.com/tools"
-  tools:context="com.example.popularmovies.MainActivity"
   android:layout_margin="4dp"
   android:layout_height="match_parent"
   android:layout_width="match_parent"
@@ -10,7 +13,7 @@
   >
 
   <android.support.v7.widget.RecyclerView
-    android:id="@+id/movies_rv"
+    android:id="@+id/main_recyclerview"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     />

@@ -31,11 +31,11 @@ public class GsonRequest<T> extends Request<T> {
 
   /**
    * Full constructor with all possible parameters.
-   * @param method
-   * @param url
-   * @param cl
-   * @param listener
-   * @param errorListener
+   * @param method        Request execution method: {@link Method}
+   * @param url           Request URL string.
+   * @param cl            Response class to be instantiated and returned by this request.
+   * @param listener      Response listener {@link Response.Listener<T>}. Called on succesfull request completion to return response object.
+   * @param errorListener Error listener {@link Response.ErrorListener}. Called if network request fails.
    */
   public GsonRequest (int method, String url, Class<T> cl, Response.Listener<T> listener, Response.ErrorListener errorListener) {
     super(method, url, errorListener);
@@ -48,10 +48,10 @@ public class GsonRequest<T> extends Request<T> {
 
   /**
    * Simplified constructor with only mandatory parameters.
-   * @param url
-   * @param cl
-   * @param listener
-   * @param errorListener
+   * @param url           Request URL string.
+   * @param cl            Response class to be instantiated and returned by this request.
+   * @param listener      Response listener {@link Response.Listener<T>}. Called on succesfull request completion to return response object.
+   * @param errorListener Error listener {@link Response.ErrorListener}. Called if network request fails.
    */
   public GsonRequest (String url, Class<T> cl, Response.Listener<T> listener, Response.ErrorListener errorListener) {
     this(Method.GET, url, cl, listener, errorListener);
@@ -98,9 +98,9 @@ public class GsonRequest<T> extends Request<T> {
 
   /**
    * Parse JSON and catch exceptions inside.
-   * @param json JSON text.
-   * @param cl Class which object to return.
-   * @return Parsed object or null.
+   * @param json  JSON text.
+   * @param cl    Class to instantiale by parsing JSON.
+   * @return Parsed object of class cl or null.
    */
   @Nullable
   private Object parseJson (String json, Class cl) {

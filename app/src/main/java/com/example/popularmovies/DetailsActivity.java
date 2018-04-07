@@ -229,6 +229,10 @@ public class DetailsActivity extends AppCompatActivity
   }
   
   
+  /**
+   * Poster image click handler. Used to show movie images view activity.
+   * @param view Unused.
+   */
   public void onPosterClick (View view) {
     // TODO: Add images view support.
   }
