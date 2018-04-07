@@ -66,6 +66,7 @@
     android:layout_marginStart="8dp"
     android:layout_marginLeft="8dp"
     android:contentDescription="@string/content_description_poster_preview"
+    android:onClick="onPosterClick"
     
     tools:background="@android:color/black"
     android:background="@null"

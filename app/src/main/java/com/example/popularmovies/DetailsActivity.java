@@ -213,11 +213,10 @@ public class DetailsActivity extends AppCompatActivity
    * @param view Unused.
    */
   public void onVideosClick (View view) {
-    // TODO: Open videos list activity.
-    /*Intent intent = new Intent(this, VideosActivity.class);
+    Intent intent = new Intent(this, VideosActivity.class);
     intent.putExtra(VideosActivity.EXTRA_MOVIE_TITLE, mMovieShort.title);
     intent.putExtra(VideosActivity.EXTRA_MOVIE_ID,    mMovieShort.id);
-    startActivity(intent);*/
+    startActivity(intent);
   }
   
   
@@ -227,5 +226,10 @@ public class DetailsActivity extends AppCompatActivity
    */
   public void onStarClick (View view) {
     // TODO: Add / remove from favorites (using content provider).
+  }
+  
+  
+  public void onPosterClick (View view) {
+    // TODO: Add images view support.
   }
 }

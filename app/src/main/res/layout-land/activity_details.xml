@@ -119,7 +119,7 @@
     android:paddingTop="16dp"
     android:onClick="onReviewsClick"
     app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/title_tv"
+    app:layout_constraintTop_toBottomOf="@id/star_button"
     />
   
   <Button

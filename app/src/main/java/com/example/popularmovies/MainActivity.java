@@ -43,6 +43,8 @@ public class MainActivity extends AppCompatActivity
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
     
+    // TODO: Restore RV position after screen rotation!
+    
     // Detect screen orientation to decide on columns count.
     boolean isLandscape = (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
     

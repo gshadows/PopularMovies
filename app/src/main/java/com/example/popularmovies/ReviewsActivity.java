@@ -59,7 +59,7 @@ public class ReviewsActivity extends AppCompatActivity
     mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     mAdapter = new ReviewsAdapter(this, this);
     mRecyclerView.setAdapter(mAdapter);
-    mRecyclerView.setHasFixedSize(true); // All posters assumed to be same size.
+    mRecyclerView.setHasFixedSize(false); // Reviews are not guarantied to be same size (because my trimming technique is too simple).
   
     // Begin network request.
     api3 = new Api3(Secrets.THEMOVIEDB_API_KEY, this);
