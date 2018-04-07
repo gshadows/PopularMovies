@@ -197,7 +197,7 @@ public class DetailsActivity extends AppCompatActivity
   
   
   /**
-   * "Reviews" button click handler.
+   * "Reviews" button click handler. Used to open user's movie reviews list.
    * @param view Unused.
    */
   public void onReviewsClick (View view) {
@@ -209,13 +209,23 @@ public class DetailsActivity extends AppCompatActivity
   
   
   /**
-   * "Videos" button click handler.
+   * "Videos" button click handler. Used to open related videos list (trailers etc).
    * @param view Unused.
    */
   public void onVideosClick (View view) {
+    // TODO: Open videos list activity.
     /*Intent intent = new Intent(this, VideosActivity.class);
     intent.putExtra(VideosActivity.EXTRA_MOVIE_TITLE, mMovieShort.title);
     intent.putExtra(VideosActivity.EXTRA_MOVIE_ID,    mMovieShort.id);
     startActivity(intent);*/
+  }
+  
+  
+  /**
+   * "Star" image button click handler. This is a favorite movie check mark.
+   * @param view Unused.
+   */
+  public void onStarClick (View view) {
+    // TODO: Add / remove from favorites (using content provider).
   }
 }

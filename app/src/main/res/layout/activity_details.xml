@@ -25,6 +25,18 @@
     app:layout_constraintTop_toTopOf="parent"
     />
   
+  <ImageButton
+    android:id="@+id/star_button"
+    android:layout_width="64dp"
+    android:layout_height="64dp"
+    android:src="@android:drawable/star_big_off"
+    android:onClick="onStarClick"
+    android:scaleType="fitCenter"
+    android:background="@null"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    />
+  
   <TextView
     android:id="@+id/title_tv"
     android:layout_width="wrap_content"

@@ -22,7 +22,19 @@
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="parent"
     />
-
+  
+  <ImageButton
+    android:id="@+id/star_button"
+    android:layout_width="64dp"
+    android:layout_height="64dp"
+    android:src="@android:drawable/star_big_off"
+    android:onClick="onStarClick"
+    android:scaleType="fitCenter"
+    android:background="@null"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    />
+  
   <ImageView
     android:id="@+id/back_image_iv"
     tools:ignore="ContentDescription"
@@ -100,23 +112,25 @@
     />
   
   <Button
+    android:id="@+id/reviews_button"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:text="@string/reviews"
-    android:paddingTop="8dp"
+    android:paddingTop="16dp"
     android:onClick="onReviewsClick"
-    app:layout_constraintStart_toEndOf="@id/poster_iv"
-    app:layout_constraintTop_toBottomOf="@id/rate_tv"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/title_tv"
     />
   
   <Button
+    android:id="@+id/videos_button"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:text="@string/videos"
-    android:paddingTop="8dp"
+    android:paddingTop="16dp"
     android:onClick="onVideosClick"
     app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/rate_tv"
+    app:layout_constraintTop_toBottomOf="@id/reviews_button"
     />
   
   <TextView
@@ -124,7 +138,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:paddingTop="12dp"
-    tools:text="    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+    tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintTop_toBottomOf="@id/poster_iv"
