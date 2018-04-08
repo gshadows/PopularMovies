@@ -22,10 +22,18 @@ public class MoviesDbHelper extends SQLiteOpenHelper {
   @Override
   public void onCreate (SQLiteDatabase db) {
     final String SQL_CREATE_DB = "CREATE TABLE " + FavoriteMovies.TABLE_NAME + " ("
-      + FavoriteMovies._ID        + " INTEGER PRIMARY KEY, "
-      + FavoriteMovies.COL_NAME   + " , "
-      + FavoriteMovies.COL_POSTER + " );";
-
+      + FavoriteMovies._ID            + " INTEGER PRIMARY KEY ON CONFLICT REPLACE, "
+      + FavoriteMovies.COL_TITLE      + " TEXT NOT NULL, "
+      + FavoriteMovies.COL_ORIG_TITLE + " TEXT NOT NULL, "
+      + FavoriteMovies.COL_POSTER     + " TEXT NOT NULL, "
+      + FavoriteMovies.COL_BACKDROP   + " TEXT NOT NULL, "
+      + FavoriteMovies.COL_ORIG_LANG  + " TEXT NOT NULL, "
+      + FavoriteMovies.COL_OVERVIEW   + " TEXT NOT NULL, "
+      + FavoriteMovies.COL_RELEASE    + " TEXT NOT NULL, "
+      + FavoriteMovies.COL_VOTE_AVG   + " REAL NOT NULL, "
+      + FavoriteMovies.COL_VOTE_CNT   + " INTEGER NOT NULL, "
+      + FavoriteMovies.COL_RUNTIME    + " INTEGER);";
+    
     db.execSQL(SQL_CREATE_DB);
   }
 
