@@ -41,8 +41,12 @@
   <!-- Content descriptions -->
   <string name="poster_content_description">Poster image</string>
   <string name="poster_error_content_description">Poster loading failed</string>
+  <string name="video_preview_content_description">Video preview image</string>
+  <string name="video_no_preview_content_description">No video preview available</string>
   
   <!-- Other strings -->
   <string name="tmdb_url">https://www.themoviedb.org</string>
+  <string name="remove_from_fav">Remove from favorites</string>
+  <string name="add_to_fav">Add to favorites</string>
 
 </resources>

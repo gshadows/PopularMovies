@@ -5,11 +5,9 @@ import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.example.popularmovies.themoviedb.Api3;
@@ -100,7 +98,7 @@ public class MoviesListAdapter extends RecyclerView.Adapter<MoviesListAdapter.Vi
    * @param position Item position.
    * @return True if item marked favorite.
    */
-  public boolean getFavorite (int position) {
+  public boolean isFavorite (int position) {
     return mFavorites[position];
   }
   
@@ -117,8 +115,7 @@ public class MoviesListAdapter extends RecyclerView.Adapter<MoviesListAdapter.Vi
   public void onBindViewHolder (final MoviesListAdapter.ViewHolder holder, final int position) {
     
     // Set "favorite" star.
-    //Log.d(TAG, "onBindViewHolder(" + position + ") fav = " + mFavorites[position]);
-    holder.mStarIB.setPressed(mFavorites[position]);
+    holder.updateStarButton(position);
     
     // Prepare image URL.
     String imageURL = Api3.getImageURL(mMovies[position].poster_path, Options.getInstance(mContext).getPostersPreviewResolution());
@@ -153,8 +150,8 @@ public class MoviesListAdapter extends RecyclerView.Adapter<MoviesListAdapter.Vi
   
   class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     
-    public ImageButton mStarIB;
-    public ImageView   mPosterIV;
+    public ImageView mStarIB;
+    public ImageView mPosterIV;
     
     public ViewHolder (View view) {
       super(view);
@@ -165,12 +162,18 @@ public class MoviesListAdapter extends RecyclerView.Adapter<MoviesListAdapter.Vi
       view.setOnClickListener(this);
       mStarIB.setOnClickListener(this); // To select favorite movie.
     }
+  
+  
+    private void updateStarButton(int position) {
+      mStarIB.setImageResource(isFavorite(position) ? android.R.drawable.btn_star_big_on : android.R.drawable.btn_star_big_off);
+    }
     
     
     @Override
     public void onClick (View view) {
       int position = getAdapterPosition();
       if (view == mStarIB) {
+        updateStarButton(position);
         mClickListener.onClickStar(position);
       } else {
         mClickListener.onClickItem(position);

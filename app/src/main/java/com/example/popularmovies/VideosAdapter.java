@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.popularmovies.themoviedb.TmdbVideo;
+import com.squareup.picasso.Picasso;
 
 
 /**
@@ -109,10 +110,28 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.ViewHolder
       .toString();
     holder.mDescriptionTV.setText(text);
     
-    // For unknown video types override "play" icon with error.
     if (getVideoURL(position) == null) {
+      // For unknown video types override "play" icon with error.
       holder.mImageView.setImageResource(android.R.drawable.stat_notify_error);
       holder.mImageView.setColorFilter(Color.RED);
+      holder.mImageView.setContentDescription(mContext.getString(R.string.video_no_preview_content_description));
+    } else {
+      // Known video type. Need to clear to defaults assuming we could be reusing previously colored "error" ViewHolder.
+      holder.mImageView.setImageResource(android.R.drawable.ic_media_play);
+      holder.mImageView.clearColorFilter();
+      // Attempt to load preview image or use default "Play" icon.
+      Picasso.with(mContext)
+        .load(getVideoThumbnailURL(position))
+        .placeholder(android.R.drawable.progress_indeterminate_horizontal)
+        .error(android.R.drawable.stat_notify_error)
+        .into(holder.mImageView, new com.squareup.picasso.Callback() {
+          @Override public void onSuccess () {
+            holder.mImageView.setContentDescription(mContext.getString(R.string.video_no_preview_content_description));
+          }
+          @Override public void onError () {
+            holder.mImageView.setContentDescription(mContext.getString(R.string.video_preview_content_description));
+          }
+        });
     }
   }
   

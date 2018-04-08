@@ -4,26 +4,24 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-
-import com.example.popularmovies.db.SavedMovieInfo;
-import com.squareup.picasso.Picasso;
-
 import com.example.popularmovies.databinding.ActivityDetailsBinding;
+import com.example.popularmovies.db.SavedMovieInfo;
 import com.example.popularmovies.themoviedb.Api3;
 import com.example.popularmovies.themoviedb.TmdbMovieDetails;
-import com.example.popularmovies.themoviedb.TmdbMovieShort;
 import com.example.popularmovies.utils.Options;
+import com.squareup.picasso.Picasso;
 
 
 public class DetailsActivity extends AppCompatActivity
@@ -31,10 +29,13 @@ public class DetailsActivity extends AppCompatActivity
 
   public static final String TAG = DetailsActivity.class.getSimpleName();
   
-  public static final String EXTRA_MOVIE = "movie";
+  public static final String EXTRA_MOVIE       = "movie";
+  public static final String EXTRA_IS_FAVORITE = "is_fav";
 
   private ActivityDetailsBinding mBinding;
   private SavedMovieInfo mMovieInfo;
+  //private Set<Integer> favorites = new HashSet<>(); // Will be used if details activity allows swipe to multiple movies.
+  private boolean mIsFavorite;
   
   private Api3 api3;
   private Request<TmdbMovieDetails> mDetailsRequest = null;
@@ -58,9 +59,17 @@ public class DetailsActivity extends AppCompatActivity
     }
     showMoveInfo();
     
+    // Favorite button star.
+    updateStarButton();
+    
     // Begin network request for movie details.
     api3 = new Api3(Secrets.THEMOVIEDB_API_KEY, this);
     requireMovieDetails();
+  }
+  
+  
+  private void updateStarButton() {
+    mBinding.starButton.setImageResource(mIsFavorite ? android.R.drawable.btn_star_big_on : android.R.drawable.btn_star_big_off);
   }
 
 
@@ -92,6 +101,16 @@ public class DetailsActivity extends AppCompatActivity
       Log.e(TAG, "Bad parcelable passed");
       return false;
     }
+    
+    // get favorite flag.
+    Object isFav = intent.getExtras().get(EXTRA_IS_FAVORITE);
+    if ((isFav == null) || !(isFav instanceof Boolean)) {
+      Log.e(TAG, "Bad favorite flag passed");
+      return false;
+    }
+    mIsFavorite = (boolean)isFav;
+    Log.d(TAG, "readIntentMovieExtra(): fav is " + mIsFavorite);
+    
     return true;
   }
 
@@ -104,6 +123,11 @@ public class DetailsActivity extends AppCompatActivity
     // Set title.
     setTitle(mMovieInfo.title);
     mBinding.titleTv.setText(mMovieInfo.title);
+    
+    // Add to favorites button.
+    //boolean isFavorite = favorites.contains(mMovieInfo.id);
+    mBinding.starButton.setPressed(mIsFavorite);
+    mBinding.starButton.setContentDescription(mIsFavorite ? getString(R.string.remove_from_fav) : getString(R.string.add_to_fav));
     
     // Start background image loading.
     String imagePathBG = Api3.getImageURL(mMovieInfo.backdrop_path, Options.getInstance(this).getBackgroundResolution());
@@ -230,6 +254,13 @@ public class DetailsActivity extends AppCompatActivity
    */
   public void onStarClick (View view) {
     // TODO: Add / remove from favorites (using content provider).
+    /*if (mBinding.starButton.isPressed()) {
+      favorites.add(mMovieInfo.id);
+    } else {
+      favorites.remove(mMovieInfo.id);
+    }*/
+    mIsFavorite = !mIsFavorite;
+    updateStarButton();
   }
   
   

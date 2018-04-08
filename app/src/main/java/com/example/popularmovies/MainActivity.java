@@ -2,21 +2,20 @@ package com.example.popularmovies;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.support.design.widget.Snackbar;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-
 import com.example.popularmovies.db.SavedMovieInfo;
 import com.example.popularmovies.themoviedb.Api3;
 import com.example.popularmovies.themoviedb.TmdbMoviesPage;
@@ -196,6 +195,8 @@ public class MainActivity extends AppCompatActivity
   public void onClickItem (int item) {
     Intent intent = new Intent(this, DetailsActivity.class);
     intent.putExtra(DetailsActivity.EXTRA_MOVIE, new SavedMovieInfo(mAdapter.getMovie(item)));
+    intent.putExtra(DetailsActivity.EXTRA_IS_FAVORITE, mAdapter.isFavorite(item));
+    Log.d(TAG, "onClickItem(): " + item + " - fav is " + mAdapter.isFavorite(item));
     startActivity(intent);
   }
   
