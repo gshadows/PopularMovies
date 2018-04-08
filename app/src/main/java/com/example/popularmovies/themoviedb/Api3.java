@@ -14,7 +14,7 @@ import com.android.volley.toolbox.Volley;
  * Simple TheMovieDB.com site API version 3 implementation.
  */
 public class Api3 {
-  private static final String TAG = Api3.class.getSimpleName();
+  //private static final String TAG = Api3.class.getSimpleName();
   
   private static final String DEFAULT_BASE_ADDRESS = "https://api.themoviedb.org/3";
   private static final String DEFAULT_IMAGES_PATH  = "http://image.tmdb.org/t/p/w";

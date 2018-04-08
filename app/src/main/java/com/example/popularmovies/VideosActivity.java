@@ -147,7 +147,7 @@ public class VideosActivity extends AppCompatActivity
   @Override
   public void onErrorResponse (final VolleyError error) {
     mSwipeRL.setRefreshing(false);
-    Log.d(TAG, "onErrorResponse(): " + error.getMessage());
+    Log.w(TAG, "onErrorResponse(): " + error.getMessage());
     
     Snackbar.make(mRecyclerView, R.string.fail_get_movies_list, Snackbar.LENGTH_LONG)
       .setAction(R.string.refresh_big, new View.OnClickListener() {

@@ -11,7 +11,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -109,7 +108,6 @@ public class DetailsActivity extends AppCompatActivity
       return false;
     }
     mIsFavorite = (boolean)isFav;
-    Log.d(TAG, "readIntentMovieExtra(): fav is " + mIsFavorite);
     
     return true;
   }
@@ -204,7 +202,7 @@ public class DetailsActivity extends AppCompatActivity
    */
   @Override
   public void onErrorResponse (final VolleyError error) {
-    Log.d(TAG, "onErrorResponse(): " + error.getMessage());
+    Log.w(TAG, "onErrorResponse(): " + error.getMessage());
     Snackbar.make(mBinding.titleTv, R.string.fail_get_movie_info, Snackbar.LENGTH_LONG)
       .setAction(R.string.refresh_big, new View.OnClickListener() { @Override public void onClick (View v) {
         requireMovieDetails();

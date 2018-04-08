@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity
   @Override
   public void onErrorResponse (final VolleyError error) {
     mSwipeRL.setRefreshing(false);
-    Log.d(TAG, "onErrorResponse(): " + error.getMessage());
+    Log.w(TAG, "onErrorResponse(): " + error.getMessage());
     
     Snackbar.make(mRecyclerView, R.string.fail_get_movies_list, Snackbar.LENGTH_LONG)
       .setAction(R.string.refresh_big, new View.OnClickListener() { @Override public void onClick (View v) {
@@ -196,7 +196,6 @@ public class MainActivity extends AppCompatActivity
     Intent intent = new Intent(this, DetailsActivity.class);
     intent.putExtra(DetailsActivity.EXTRA_MOVIE, new SavedMovieInfo(mAdapter.getMovie(item)));
     intent.putExtra(DetailsActivity.EXTRA_IS_FAVORITE, mAdapter.isFavorite(item));
-    Log.d(TAG, "onClickItem(): " + item + " - fav is " + mAdapter.isFavorite(item));
     startActivity(intent);
   }
   

@@ -20,7 +20,6 @@ import com.squareup.picasso.Picasso;
  * Adapter for the main activity's RecyclerView grid.
  */
 public class MoviesListAdapter extends RecyclerView.Adapter<MoviesListAdapter.ViewHolder> {
-  
   private static final String TAG = MoviesListAdapter.class.getSimpleName();
   
   public interface OnClickListener {
@@ -119,7 +118,6 @@ public class MoviesListAdapter extends RecyclerView.Adapter<MoviesListAdapter.Vi
     
     // Prepare image URL.
     String imageURL = Api3.getImageURL(mMovies[position].poster_path, Options.getInstance(mContext).getPostersPreviewResolution());
-    //Log.d(TAG, "onBindViewHolder(" + position + ") image: " + imageURL);
 
     // Load image.
     holder.mPosterIV.setColorFilter(0);
@@ -130,12 +128,9 @@ public class MoviesListAdapter extends RecyclerView.Adapter<MoviesListAdapter.Vi
       .error(android.R.drawable.stat_notify_error)
       .into(holder.mPosterIV, new com.squareup.picasso.Callback() {
         @Override
-        public void onSuccess () {
-          //Log.d (TAG, "onBindViewHolder.Picasso.onSuccess(" + position + ")");
-        }
+        public void onSuccess () {}
         @Override
         public void onError () {
-          //Log.d (TAG, "onBindViewHolder.Picasso.onError(" + position + ")");
           holder.mPosterIV.setColorFilter(Color.RED);
         }
       });

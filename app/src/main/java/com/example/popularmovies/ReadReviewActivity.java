@@ -8,7 +8,6 @@ import android.widget.TextView;
 
 
 public class ReadReviewActivity extends AppCompatActivity {
-  
   public static final String TAG = ReadReviewActivity.class.getSimpleName();
   
   public static final String EXTRA_TITLE  = "title";
