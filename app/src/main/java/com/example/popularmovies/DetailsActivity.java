@@ -119,8 +119,10 @@ public class DetailsActivity extends AppCompatActivity
   private void showMoveInfo() {
 
     // Set title.
-    setTitle(mMovieInfo.title);
-    mBinding.titleTv.setText(mMovieInfo.title);
+    if (mMovieInfo.title != null) {
+      setTitle(mMovieInfo.title);
+      mBinding.titleTv.setText(mMovieInfo.title);
+    }
     
     // Add to favorites button.
     //boolean isFavorite = favorites.contains(mMovieInfo.id);
@@ -128,8 +130,9 @@ public class DetailsActivity extends AppCompatActivity
     mBinding.starButton.setContentDescription(mIsFavorite ? getString(R.string.remove_from_fav) : getString(R.string.add_to_fav));
     
     // Start background image loading.
-    String imagePathBG = Api3.getImageURL(mMovieInfo.backdrop_path, Options.getInstance(this).getBackgroundResolution());
-    Picasso.with(this)
+    if ((mMovieInfo.backdrop_path != null) && !mMovieInfo.backdrop_path.isEmpty()) {
+      String imagePathBG = Api3.getImageURL(mMovieInfo.backdrop_path, Options.getInstance(this).getBackgroundResolution());
+      Picasso.with(this)
         .load(imagePathBG)
         .into(mBinding.backImageIv, new com.squareup.picasso.Callback() {
           @Override public void onSuccess () {
@@ -139,7 +142,7 @@ public class DetailsActivity extends AppCompatActivity
             // After successful loading I enable background and re-bind title to the bottom of it.
             // The only disadvantage is title "jumps" down if internet works good and fast. Assuming
             // success looks bad in case of slow internet (or none). Sorry for long comment :)
-            
+  
             // Enable background.
             mBinding.backImageIv.setVisibility(View.VISIBLE);
             if (!mIsLandscape) {
@@ -152,34 +155,36 @@ public class DetailsActivity extends AppCompatActivity
               constraints.applyTo(layout);
             }
           }
+  
           @Override public void onError () {} // When no background loaded title is bound to the top of screen.
         });
+    }
     
     // Start poster image loading.
-    String imagePathPoster = Api3.getImageURL(mMovieInfo.poster_path, Options.getInstance(this).getPostersDetailsResolution());
-    mBinding.posterIv.setColorFilter(0);
-    Picasso.with(this)
+    if ((mMovieInfo.poster_path != null) && !mMovieInfo.poster_path.isEmpty()) {
+      String imagePathPoster = Api3.getImageURL(mMovieInfo.poster_path, Options.getInstance(this).getPostersDetailsResolution());
+      mBinding.posterIv.setColorFilter(0);
+      Picasso.with(this)
         .load(imagePathPoster)
         .placeholder(android.R.drawable.progress_indeterminate_horizontal)
         .error(android.R.drawable.stat_notify_error)
         .into(mBinding.posterIv, new com.squareup.picasso.Callback() {
-          @Override public void onSuccess () {
-            mBinding.posterIv.setContentDescription(getString(R.string.poster_content_description));
-          }
+          @Override public void onSuccess () { mBinding.posterIv.setContentDescription(getString(R.string.poster_content_description)); }
           @Override public void onError () {
             mBinding.posterIv.setColorFilter(Color.RED);
             mBinding.posterIv.setContentDescription(getString(R.string.poster_error_content_description));
           }
         });
+    }
     
     // Set release year.
-    mBinding.yearTv.setText(getString(R.string.year) + mMovieInfo.release_date.substring(0, 4));
+    if (mMovieInfo.release_date != null) mBinding.yearTv.setText(getString(R.string.year) + mMovieInfo.release_date.substring(0, 4));
     
     // Set rate.
     mBinding.rateTv.setText(getString(R.string.rate) + String.valueOf(mMovieInfo.vote_average) + " / 10");
     
     // Set description.
-    mBinding.descriptionTv.setText("    " + mMovieInfo.overview);
+    if (mMovieInfo.overview != null) mBinding.descriptionTv.setText("    " + mMovieInfo.overview);
     
     // Try to show details if it was passed from the DB.
     showDetailedInfo();

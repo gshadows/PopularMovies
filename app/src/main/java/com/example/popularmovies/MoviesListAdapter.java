@@ -117,23 +117,27 @@ public class MoviesListAdapter extends RecyclerView.Adapter<MoviesListAdapter.Vi
     holder.updateStarButton(position);
     
     // Prepare image URL.
-    String imageURL = Api3.getImageURL(mMovies[position].poster_path, Options.getInstance(mContext).getPostersPreviewResolution());
-
-    // Load image.
-    holder.mPosterIV.setColorFilter(0);
-    holder.mPosterIV.setContentDescription(mMovies[position].title);
-    Picasso.with(mContext)
-      .load(imageURL)
-      .placeholder(android.R.drawable.progress_indeterminate_horizontal)
-      .error(android.R.drawable.stat_notify_error)
-      .into(holder.mPosterIV, new com.squareup.picasso.Callback() {
-        @Override
-        public void onSuccess () {}
-        @Override
-        public void onError () {
-          holder.mPosterIV.setColorFilter(Color.RED);
-        }
-      });
+    String posterPath = mMovies[position].poster_path;
+    if ((posterPath == null) || posterPath.isEmpty()) {
+      // No poster available. Show empty.
+      // TODO: Show movie title if no poster available.
+      holder.mPosterIV.setImageResource(android.R.drawable.stat_notify_error);
+    } else {
+      // Start poster image loading.
+      String imageURL = Api3.getImageURL(posterPath, Options.getInstance(mContext).getPostersPreviewResolution());
+  
+      // Load image.
+      holder.mPosterIV.setColorFilter(0);
+      holder.mPosterIV.setContentDescription(mMovies[position].title);
+      Picasso.with(mContext)
+        .load(imageURL)
+        .placeholder(android.R.drawable.progress_indeterminate_horizontal)
+        .error(android.R.drawable.stat_notify_error)
+        .into(holder.mPosterIV, new com.squareup.picasso.Callback() {
+          @Override public void onSuccess () {}
+          @Override public void onError () { holder.mPosterIV.setColorFilter(Color.RED); } // TODO: Show movie title if fails to download poster.
+        });
+    }
   }
   
   
