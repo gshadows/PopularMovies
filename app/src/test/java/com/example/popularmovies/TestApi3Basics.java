@@ -6,10 +6,9 @@ import com.example.popularmovies.themoviedb.Api3;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 
 public class TestApi3Basics {
