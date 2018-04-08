@@ -5,13 +5,13 @@
   
   <item
     android:id="@+id/menu_top_rated"
-    android:title="@string/top_rated"
+    android:title="@string/top"
     app:showAsAction="ifRoom"
     />
 
   <item
     android:id="@+id/menu_popular"
-    android:title="@string/popular"
+    android:title="@string/pop"
     app:showAsAction="ifRoom"
     />
 

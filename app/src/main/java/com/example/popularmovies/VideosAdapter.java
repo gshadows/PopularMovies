@@ -47,7 +47,7 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.ViewHolder
     mVideos = Videos;
     notifyDataSetChanged();
   }
-
+  
   
   /**
    * Return video information at sepcified positon.
@@ -57,11 +57,10 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.ViewHolder
   public TmdbVideo getVideo(int position) {
     return mVideos[position];
   }
-
-  
+    
   
   /**
-   * Generate URL for the video at sepcified positon.
+   * Generate URL for the video at specified position.
    * @param position Video position.
    * @return Generated URL string or null if video type is unknown.
    */
@@ -72,7 +71,20 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.ViewHolder
       default: return null; // Unknown video site.
     }
   }
-
+  
+  
+  /**
+   * Generate URL for the video preview image at specified position.
+   * @param position Video position.
+   * @return Generated URL string or null if video type is unknown.
+   */
+  public String getVideoThumbnailURL (int position) {
+    TmdbVideo vid = getVideo(position);
+    switch (vid.site.toLowerCase()) {
+      case "youtube": return "https://img.youtube.com/vi/" + vid.key + "/0.jpg";
+      default: return null; // Unknown video site.
+    }
+  }
   
   
   @Override
@@ -81,8 +93,8 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.ViewHolder
     view.setFocusable(true);
     return new ViewHolder(view);
   }
-
-
+  
+  
   @Override
   public void onBindViewHolder (final VideosAdapter.ViewHolder holder, final int position) {
     TmdbVideo vid = mVideos[position];
@@ -118,7 +130,7 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.ViewHolder
     
     public ViewHolder (View view) {
       super(view);
-  
+      
       mDescriptionTV = view.findViewById(R.id.description_tv);
       mImageView = view.findViewById(R.id.play_iv);
       

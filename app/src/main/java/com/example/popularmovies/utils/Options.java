@@ -26,7 +26,16 @@ public class Options implements SharedPreferences.OnSharedPreferenceChangeListen
   
   
   public enum CurrentTab {
-    FAVORITES, POPULAR, TOP_RATED
+    FAVORITES, POPULAR, TOP_RATED;
+  
+    public String toTranslatableString (Context context) {
+      switch (this) {
+        case FAVORITES: return context.getString(R.string.favorites);
+        case POPULAR:   return context.getString(R.string.popular);
+        case TOP_RATED: return context.getString(R.string.top_rated);
+        default: return "";
+      }
+    }
   };
   
   

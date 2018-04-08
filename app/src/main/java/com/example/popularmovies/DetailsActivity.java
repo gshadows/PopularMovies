@@ -16,6 +16,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
+import com.example.popularmovies.db.SavedMovieInfo;
 import com.squareup.picasso.Picasso;
 
 import com.example.popularmovies.databinding.ActivityDetailsBinding;
@@ -33,8 +34,7 @@ public class DetailsActivity extends AppCompatActivity
   public static final String EXTRA_MOVIE = "movie";
 
   private ActivityDetailsBinding mBinding;
-  private TmdbMovieShort   mMovieShort;
-  private TmdbMovieDetails mMovieDetails;
+  private SavedMovieInfo mMovieInfo;
   
   private Api3 api3;
   private Request<TmdbMovieDetails> mDetailsRequest = null;
@@ -56,7 +56,7 @@ public class DetailsActivity extends AppCompatActivity
       finish();
       return;
     }
-    showMinimalInfo();
+    showMoveInfo();
     
     // Begin network request for movie details.
     api3 = new Api3(Secrets.THEMOVIEDB_API_KEY, this);
@@ -72,7 +72,7 @@ public class DetailsActivity extends AppCompatActivity
   
   
   private void requireMovieDetails() {
-    mDetailsRequest = api3.requireMovieDetails(mMovieShort.id, this, this);
+    mDetailsRequest = api3.requireMovieDetails(mMovieInfo.id, this, this);
   }
   
   
@@ -87,8 +87,8 @@ public class DetailsActivity extends AppCompatActivity
       return false;
     }
     // Get parcelable movie short information object.
-    mMovieShort = intent.getParcelableExtra(EXTRA_MOVIE);
-    if (mMovieShort == null) {
+    mMovieInfo = intent.getParcelableExtra(EXTRA_MOVIE);
+    if (mMovieInfo == null) {
       Log.e(TAG, "Bad parcelable passed");
       return false;
     }
@@ -99,14 +99,14 @@ public class DetailsActivity extends AppCompatActivity
   /**
    * Show minimal movie information that is accessible immediately from the intent.
    */
-  private void showMinimalInfo() {
+  private void showMoveInfo() {
 
     // Set title.
-    setTitle(mMovieShort.title);
-    mBinding.titleTv.setText(mMovieShort.title);
+    setTitle(mMovieInfo.title);
+    mBinding.titleTv.setText(mMovieInfo.title);
     
     // Start background image loading.
-    String imagePathBG = Api3.getImageURL(mMovieShort.backdrop_path, Options.getInstance(this).getBackgroundResolution());
+    String imagePathBG = Api3.getImageURL(mMovieInfo.backdrop_path, Options.getInstance(this).getBackgroundResolution());
     Picasso.with(this)
         .load(imagePathBG)
         .into(mBinding.backImageIv, new com.squareup.picasso.Callback() {
@@ -134,7 +134,7 @@ public class DetailsActivity extends AppCompatActivity
         });
     
     // Start poster image loading.
-    String imagePathPoster = Api3.getImageURL(mMovieShort.poster_path, Options.getInstance(this).getPostersDetailsResolution());
+    String imagePathPoster = Api3.getImageURL(mMovieInfo.poster_path, Options.getInstance(this).getPostersDetailsResolution());
     mBinding.posterIv.setColorFilter(0);
     Picasso.with(this)
         .load(imagePathPoster)
@@ -151,22 +151,26 @@ public class DetailsActivity extends AppCompatActivity
         });
     
     // Set release year.
-    mBinding.yearTv.setText(getString(R.string.year) + mMovieShort.release_date.substring(0, 4));
+    mBinding.yearTv.setText(getString(R.string.year) + mMovieInfo.release_date.substring(0, 4));
     
     // Set rate.
-    mBinding.rateTv.setText(getString(R.string.rate) + String.valueOf(mMovieShort.vote_average) + " / 10");
+    mBinding.rateTv.setText(getString(R.string.rate) + String.valueOf(mMovieInfo.vote_average) + " / 10");
     
     // Set description.
-    mBinding.descriptionTv.setText("    " + mMovieShort.overview);
+    mBinding.descriptionTv.setText("    " + mMovieInfo.overview);
+    
+    // Try to show details if it was passed from the DB.
+    showDetailedInfo();
   }
 
 
   /**
-   * Show detailed movie information that is received from network asyncronously.
+   * Show detailed movie information that is generally received from network asyncronously.
+   * However for favorite movies it could be available immediately from DB.
    */
   private void showDetailedInfo() {
     // Set movie length.
-    mBinding.lengthTv.setText(getString(R.string.length) + mMovieDetails.runtime + getString(R.string.minutes_short));
+    if (mMovieInfo.runtime != null) mBinding.lengthTv.setText(getString(R.string.length) + mMovieInfo.runtime + getString(R.string.minutes_short));
   }
   
   
@@ -191,7 +195,7 @@ public class DetailsActivity extends AppCompatActivity
    */
   @Override
   public void onResponse (final TmdbMovieDetails response) {
-    mMovieDetails = response;
+    mMovieInfo.setDetails(response);
     showDetailedInfo();
   }
   
@@ -202,8 +206,8 @@ public class DetailsActivity extends AppCompatActivity
    */
   public void onReviewsClick (View view) {
     Intent intent = new Intent(this, ReviewsActivity.class);
-    intent.putExtra(ReviewsActivity.EXTRA_MOVIE_TITLE, mMovieShort.title);
-    intent.putExtra(ReviewsActivity.EXTRA_MOVIE_ID,    mMovieShort.id);
+    intent.putExtra(ReviewsActivity.EXTRA_MOVIE_TITLE, mMovieInfo.title);
+    intent.putExtra(ReviewsActivity.EXTRA_MOVIE_ID,    mMovieInfo.id);
     startActivity(intent);
   }
   
@@ -214,8 +218,8 @@ public class DetailsActivity extends AppCompatActivity
    */
   public void onVideosClick (View view) {
     Intent intent = new Intent(this, VideosActivity.class);
-    intent.putExtra(VideosActivity.EXTRA_MOVIE_TITLE, mMovieShort.title);
-    intent.putExtra(VideosActivity.EXTRA_MOVIE_ID,    mMovieShort.id);
+    intent.putExtra(VideosActivity.EXTRA_MOVIE_TITLE, mMovieInfo.title);
+    intent.putExtra(VideosActivity.EXTRA_MOVIE_ID,    mMovieInfo.id);
     startActivity(intent);
   }
   

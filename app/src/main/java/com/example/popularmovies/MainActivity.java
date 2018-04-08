@@ -17,9 +17,12 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
+import com.example.popularmovies.db.SavedMovieInfo;
 import com.example.popularmovies.themoviedb.Api3;
 import com.example.popularmovies.themoviedb.TmdbMoviesPage;
 import com.example.popularmovies.utils.Options;
+
+import static android.support.v7.widget.RecyclerView.NO_POSITION;
 
 
 public class MainActivity extends AppCompatActivity
@@ -27,12 +30,16 @@ public class MainActivity extends AppCompatActivity
   
   private static final String TAG = MainActivity.class.getSimpleName();
   
+  // Saved instance state keys.
+  private static final String SAVED_KEY_POSITION = "pos";
+  
   private Api3 api3;
   
   private RecyclerView mRecyclerView;
   private SwipeRefreshLayout mSwipeRL;
-
-  private final int mCurrentPage = 1; // In future could be increased in some way.
+  
+  private int savedPosition = NO_POSITION;  // Saved RecyclerView's position.
+  private final int mCurrentPage = 1;       // In future could be increased in some way.
   
   private Request<TmdbMoviesPage> mPageRequest = null;
   private MoviesListAdapter mAdapter;
@@ -42,8 +49,6 @@ public class MainActivity extends AppCompatActivity
   protected void onCreate (final Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_with_recyclerview);
-    
-    // TODO: Restore RV position after screen rotation!
     
     // Detect screen orientation to decide on columns count.
     boolean isLandscape = (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
@@ -58,7 +63,8 @@ public class MainActivity extends AppCompatActivity
     mAdapter = new MoviesListAdapter(this, this);
     mRecyclerView.setAdapter(mAdapter);
     mRecyclerView.setHasFixedSize(true); // All posters assumed to be same size.
-
+    if (savedInstanceState != null) savedPosition = savedInstanceState.getInt(SAVED_KEY_POSITION, NO_POSITION);
+    
     // Change activity title.
     Options.CurrentTab currentTab = Options.getInstance(this).getCurrentTab();
     setDynamicTitle(currentTab);
@@ -72,8 +78,24 @@ public class MainActivity extends AppCompatActivity
       requireMovies();  
     }});
   }
-
-
+  
+  
+  private int getRecyclerViewPosition() {
+    GridLayoutManager lm = (GridLayoutManager)mRecyclerView.getLayoutManager();
+    int pos = lm.findFirstCompletelyVisibleItemPosition();
+    if (pos == NO_POSITION) pos = lm.findFirstVisibleItemPosition(); // If all items partially invisible.
+    return pos;
+  }
+  
+  
+  @Override
+  protected void onSaveInstanceState (Bundle outState) {
+    super.onSaveInstanceState(outState);
+    if (savedPosition != NO_POSITION) savedPosition = getRecyclerViewPosition();
+    outState.putInt(SAVED_KEY_POSITION, savedPosition);
+  }
+  
+  
   @Override
   protected void onStop () {
     super.onStop();
@@ -84,6 +106,7 @@ public class MainActivity extends AppCompatActivity
   private void requireMovies() {
     switch (Options.getInstance(MainActivity.this).getCurrentTab()) {
       case FAVORITES:
+        // TODO: Favorite movies support.
         break;
       case POPULAR:
         mPageRequest = api3.requirePopularMovies(mCurrentPage, this, this);
@@ -107,7 +130,7 @@ public class MainActivity extends AppCompatActivity
    * Set activity title based on sort order: Popular or Top Rated movies.
    */
   private void setDynamicTitle (Options.CurrentTab currentTab) {
-    setTitle(currentTab.toString());
+    setTitle(currentTab.toTranslatableString(this));
   }
 
 
@@ -118,11 +141,13 @@ public class MainActivity extends AppCompatActivity
         startActivity(new Intent(this, AboutActivity.class));
         return true;
       case R.id.menu_popular:
+        savedPosition = 0; // Force reset position to zero.
         Options.getInstance(this).setCurrentTab(Options.CurrentTab.POPULAR);
         setDynamicTitle(Options.CurrentTab.POPULAR);
         requireMovies();
         return true;
       case R.id.menu_top_rated:
+        savedPosition = 0; // Force reset position to zero.
         Options.getInstance(this).setCurrentTab(Options.CurrentTab.TOP_RATED);
         setDynamicTitle(Options.CurrentTab.TOP_RATED);
         requireMovies();
@@ -158,6 +183,8 @@ public class MainActivity extends AppCompatActivity
     mSwipeRL.setRefreshing(false);
     mAdapter.setMovies(response.results, null); // TODO: In stage 2 favorites should be read from DB.
     mRecyclerView.setVisibility(View.VISIBLE);
+    if (savedPosition == NO_POSITION) savedPosition = 0;
+    mRecyclerView.scrollToPosition(savedPosition);
   }
 
 
@@ -168,7 +195,7 @@ public class MainActivity extends AppCompatActivity
   @Override
   public void onClickItem (int item) {
     Intent intent = new Intent(this, DetailsActivity.class);
-    intent.putExtra(DetailsActivity.EXTRA_MOVIE, mAdapter.getMovie(item));
+    intent.putExtra(DetailsActivity.EXTRA_MOVIE, new SavedMovieInfo(mAdapter.getMovie(item)));
     startActivity(intent);
   }
   

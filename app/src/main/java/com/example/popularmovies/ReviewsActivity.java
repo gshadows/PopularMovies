@@ -17,12 +17,18 @@ import com.example.popularmovies.themoviedb.Api3;
 import com.example.popularmovies.themoviedb.TmdbReview;
 import com.example.popularmovies.themoviedb.TmdbReviewsPage;
 
+import static android.support.v7.widget.RecyclerView.NO_POSITION;
+
 
 public class ReviewsActivity extends AppCompatActivity
   implements Response.ErrorListener, Response.Listener<TmdbReviewsPage>, ReviewsAdapter.OnClickListener {
   
   private static final String TAG = ReviewsActivity.class.getSimpleName();
   
+  // Saved instance state keys.
+  private static final String SAVED_KEY_POSITION = "pos";
+  
+  // Intent extras keys.
   public static final String EXTRA_MOVIE_TITLE = "movie_title";
   public static final String EXTRA_MOVIE_ID    = "movie_id";
   
@@ -33,7 +39,8 @@ public class ReviewsActivity extends AppCompatActivity
   
   private String mMovieTitle;
   private int mMovieId = 1;
-  private final int mCurrentPage = 1; // In future could be increased in some way.
+  private int savedPosition = NO_POSITION;  // Saved RecyclerView's position.
+  private final int mCurrentPage = 1;       // In future could be increased in some way.
   
   private Request<TmdbReviewsPage> mPageRequest = null;
   private ReviewsAdapter mAdapter;
@@ -60,6 +67,7 @@ public class ReviewsActivity extends AppCompatActivity
     mAdapter = new ReviewsAdapter(this, this);
     mRecyclerView.setAdapter(mAdapter);
     mRecyclerView.setHasFixedSize(false); // Reviews are not guarantied to be same size (because my trimming technique is too simple).
+    if (savedInstanceState != null) savedPosition = savedInstanceState.getInt(SAVED_KEY_POSITION, NO_POSITION);
   
     // Begin network request.
     api3 = new Api3(Secrets.THEMOVIEDB_API_KEY, this);
@@ -69,6 +77,22 @@ public class ReviewsActivity extends AppCompatActivity
     mSwipeRL.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {@Override public void onRefresh () {
       requireReviews();
     }});
+  }
+  
+  
+  private int getRecyclerViewPosition() {
+    LinearLayoutManager lm = (LinearLayoutManager)mRecyclerView.getLayoutManager();
+    int pos = lm.findFirstCompletelyVisibleItemPosition();
+    if (pos == NO_POSITION) pos = lm.findFirstVisibleItemPosition(); // If all items partially invisible.
+    return pos;
+  }
+  
+  
+  @Override
+  protected void onSaveInstanceState (Bundle outState) {
+    super.onSaveInstanceState(outState);
+    if (savedPosition != NO_POSITION) savedPosition = getRecyclerViewPosition();
+    outState.putInt(SAVED_KEY_POSITION, savedPosition);
   }
   
   
@@ -137,6 +161,8 @@ public class ReviewsActivity extends AppCompatActivity
     mSwipeRL.setRefreshing(false);
     mAdapter.setReviews(response.results);
     mRecyclerView.setVisibility(View.VISIBLE);
+    if (savedPosition == NO_POSITION) savedPosition = 0;
+    mRecyclerView.scrollToPosition(savedPosition);
   }
   
   

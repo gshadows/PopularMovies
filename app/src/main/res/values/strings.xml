@@ -4,9 +4,14 @@
   <string name="app_name">PopularMovies</string>
   
   <!-- Main menu -->
-  <string name="top_rated">Top</string>
-  <string name="popular">Pop</string>
+  <string name="top">Top</string>
+  <string name="pop">Pop</string>
   <string name="about">About</string>
+  
+  <!-- Main page titles -->
+  <string name="top_rated">Top Rated</string>
+  <string name="popular">Popular</string>
+  <string name="favorites">Favorites</string>
   
   <!-- Main activity -->
   <string name="fail_get_movies_list">Failed to fetch movies list from the server</string>
