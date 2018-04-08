@@ -42,7 +42,7 @@ public class GsonRequest<T> extends Request<T> {
     mGson = new Gson();
     mListener = listener;
     mRequestClass = cl;
-    Log.d (TAG, "GsonRequest(): " + url);
+    //Log.d (TAG, "GsonRequest(): " + url);
   }
 
 
@@ -61,14 +61,12 @@ public class GsonRequest<T> extends Request<T> {
   // This called on worker thread.
   @Override protected Response parseNetworkResponse (NetworkResponse response) {
     try {
-      Log.d (TAG, "parseNetworkResponse() begin");
       String json = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-      Log.d(TAG, "parseNetworkResponse() success");
       // This should call deliverResponse() on the UI thread.
       return Response.success(parseJson(json, mRequestClass), HttpHeaderParser.parseCacheHeaders(response));
     }
     catch (UnsupportedEncodingException ex) {
-      Log.d(TAG, "parseNetworkResponse() unsupported encoding exception");
+      Log.w(TAG, "parseNetworkResponse() unsupported encoding exception");
       // This should call deliverError() on the UI thread.
       return Response.error(new ParseError(ex));
     }
@@ -77,14 +75,13 @@ public class GsonRequest<T> extends Request<T> {
   
   // This called on UI thread.
   @Override protected void deliverResponse (T response) {
-    Log.d(TAG, "deliverResponse()");
     mListener.onResponse(response);
   }
   
   
   // This called on UI thread.
   @Override public void deliverError (VolleyError error) {
-    Log.d(TAG, "deliverError() - " + error.getMessage());
+    Log.w(TAG, "deliverError() - " + error.getMessage());
     getErrorListener().onErrorResponse(error);
   }
   
@@ -108,8 +105,8 @@ public class GsonRequest<T> extends Request<T> {
       return mGson.fromJson(json, cl);
     }
     catch (JsonSyntaxException ex) {
-      Log.d (TAG, ex.getMessage());
-      Log.v (TAG, json);
+      Log.w (TAG, ex.getMessage());
+      //Log.v (TAG, json);
       return null;
     }
   }
