@@ -27,17 +27,21 @@
     
     <activity android:name=".DetailsActivity"
       android:parentActivityName=".MainActivity"
+      android:launchMode="singleTop"
       >
       <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
     </activity>
     
     
-    <activity android:name=".AboutActivity">
+    <activity android:name=".AboutActivity"
+      android:launchMode="singleTop"
+      >
     </activity>
     
     
     <activity android:name=".ReviewsActivity"
       android:parentActivityName=".DetailsActivity"
+      android:launchMode="singleTop"
       >
       <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".DetailsActivity"/>
     </activity>
@@ -45,6 +49,7 @@
     
     <activity android:name=".ReadReviewActivity"
       android:parentActivityName=".ReviewsActivity"
+      android:launchMode="singleTop"
       >
       <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".ReviewsActivity"/>
     </activity>
@@ -52,6 +57,7 @@
     
     <activity android:name=".VideosActivity"
       android:parentActivityName=".DetailsActivity"
+      android:launchMode="singleTop"
       >
       <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".DetailsActivity"/>
     </activity>
