@@ -14,6 +14,7 @@
     <item name="android:layout_height">wrap_content</item>
     <item name="android:paddingLeft">16sp</item>
     <item name="android:paddingTop">8sp</item>
+    <item name="android:textIsSelectable">true</item>
   </style>
   
   <style name="about_lines">
@@ -23,6 +24,7 @@
     <item name="android:layout_marginTop">8dp</item>
     <item name="android:layout_marginBottom">8dp</item>
     <item name="android:linksClickable">true</item>
+    <item name="android:textIsSelectable">true</item>
   </style>
   
   <style name="Splitter">

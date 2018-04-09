@@ -14,6 +14,7 @@
     android:layout_height="wrap_content"
     android:textColor="@color/colorAccent"
     android:textSize="20sp"
+    android:textIsSelectable="true"
     tools:text="Unnamed Reviewer"
     />
   
@@ -28,6 +29,7 @@
       android:layout_height="wrap_content"
       android:textColor="@color/colorPrimaryLight"
       android:textSize="16sp"
+      android:textIsSelectable="true"
       tools:text="Darkness is coming. All human being are sheltered deep under ground. All but one. His name is unknown. His face are hidden under the hood. But his eyes shining like an emerald terrifying the evil. The battle will start soon."
       />
   

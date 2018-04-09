@@ -27,6 +27,7 @@
     android:textStyle="bold"
     android:textSize="20sp"
     android:textColor="@color/colorPrimary"
+    android:textIsSelectable="true"
     tools:text="Trailer (YouTube, 1080)\nTrailer 1"
     />
   
