@@ -61,6 +61,15 @@
       >
       <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".DetailsActivity"/>
     </activity>
+  
+  
+    <provider
+      android:name=".db.MoviesContentProvider"
+      android:authorities="com.example.popularmovies"
+      android:exported="false"
+      >
+    </provider>
+    
     
   </application>
 

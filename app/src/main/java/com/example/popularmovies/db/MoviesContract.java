@@ -1,5 +1,6 @@
 package com.example.popularmovies.db;
 
+import android.net.Uri;
 import android.provider.BaseColumns;
 
 
@@ -18,6 +19,9 @@ public class MoviesContract {
   public static final class FavoriteMovies implements BaseColumns {
     
     public static final String TABLE_NAME     = "FAV_MOVIES"; // Table name.
+    public static final String CONTENT_PATH   = "movies";     // Path for content provider.
+    public static final Uri    CONTENT_URI    = Uri.parse("content://" + CONTENT_AUTHORITY + "/" + CONTENT_PATH);
+    
     public static final String COL_TITLE      = "title";      // Movie title.
     public static final String COL_ORIG_TITLE = "orig_title"; // Movie original title.
     public static final String COL_POSTER     = "poster";     // Poster image.
@@ -29,6 +33,7 @@ public class MoviesContract {
     public static final String COL_VOTE_CNT   = "vote_cnt";   // Vote count.
     public static final String COL_RUNTIME    = "runtime";    // Run time.
     
+    public static Uri buildMovieUriById (int id) { return Uri.withAppendedPath(CONTENT_URI, String.valueOf(id)); }
   }
 
 }
