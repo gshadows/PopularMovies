@@ -16,6 +16,7 @@ import com.android.volley.VolleyError;
 import com.example.popularmovies.themoviedb.Api3;
 import com.example.popularmovies.themoviedb.TmdbReview;
 import com.example.popularmovies.themoviedb.TmdbReviewsPage;
+import com.example.popularmovies.utils.Options;
 
 import static android.support.v7.widget.RecyclerView.NO_POSITION;
 
@@ -23,7 +24,7 @@ import static android.support.v7.widget.RecyclerView.NO_POSITION;
 public class ReviewsActivity extends AppCompatActivity
   implements Response.ErrorListener, Response.Listener<TmdbReviewsPage>, ReviewsAdapter.OnClickListener {
   
-  private static final String TAG = ReviewsActivity.class.getSimpleName();
+  private static final String TAG = Options.XTAG + ReviewsActivity.class.getSimpleName();
   
   // Saved instance state keys.
   private static final String SAVED_KEY_POSITION = "pos";

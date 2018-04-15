@@ -15,6 +15,8 @@ import com.example.popularmovies.R;
  */
 public class Options implements SharedPreferences.OnSharedPreferenceChangeListener {
   
+  public static final String XTAG = "XXX-"; // Global tag prefix to filter only my own logs in logcat.
+  
   // Preference access keys.
   private static final String KEY_CURRENT_TAB         = "cur_tab";
   private static final String KEY_POSTERS_PREVIEW_RES = "post_pre_res";
@@ -39,7 +41,7 @@ public class Options implements SharedPreferences.OnSharedPreferenceChangeListen
   };
   
   
-  /** Determines movies list sort order: true - popular, false - top rated. */
+  /** Currently selected tab (movies list) in the main activity. */
   private CurrentTab mCurrentTab;
   
   /** Determines posters preview image resolution for main activity. */
@@ -54,6 +56,7 @@ public class Options implements SharedPreferences.OnSharedPreferenceChangeListen
   
   // Getters collection :)
   public CurrentTab getCurrentTab()        { return mCurrentTab; }
+  public boolean    isFavoriteTab()        { return mCurrentTab == CurrentTab.FAVORITES; }
   public int getPostersPreviewResolution() { return mPostersPreviewResolution; }
   public int getPostersDetailsResolution() { return mPostersDetailsResolution; }
   public int getBackgroundResolution()     { return mBackgroundResolution;     }
@@ -146,12 +149,7 @@ public class Options implements SharedPreferences.OnSharedPreferenceChangeListen
       throw new UnknownError("Couldn't obtain shared preferences!");
     }
     
-    // TODO: Is this object needs to be unregistered?
-    // It lives while the app lives, so it will be destroyed after last activity/service destroyed
-    // and loose last reference to it (unless we have some leaks). So no preference changes
-    // should happen after destruction.
     mSharedPrefs.registerOnSharedPreferenceChangeListener(this);
-    
     reloadEverything(context);
   }
 

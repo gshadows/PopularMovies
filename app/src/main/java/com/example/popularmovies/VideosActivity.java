@@ -16,6 +16,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.example.popularmovies.themoviedb.Api3;
 import com.example.popularmovies.themoviedb.TmdbVideosPage;
+import com.example.popularmovies.utils.Options;
 
 import static android.support.v7.widget.RecyclerView.NO_POSITION;
 
@@ -23,7 +24,7 @@ import static android.support.v7.widget.RecyclerView.NO_POSITION;
 public class VideosActivity extends AppCompatActivity
   implements Response.ErrorListener, Response.Listener<TmdbVideosPage>, VideosAdapter.OnClickListener {
   
-  private static final String TAG = VideosActivity.class.getSimpleName();
+  private static final String TAG = Options.XTAG + VideosActivity.class.getSimpleName();
   
   // Saved instance state keys.
   private static final String SAVED_KEY_POSITION = "pos";

@@ -15,7 +15,7 @@ import com.example.popularmovies.themoviedb.TmdbReview;
  * Adapter for the main activity's RecyclerView grid.
  */
 public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHolder> {
-  //private static final String TAG = ReviewsAdapter.class.getSimpleName();
+  //private static final String TAG = Options.XTAG + ReviewsAdapter.class.getSimpleName();
   
   public interface OnClickListener { void onClick (int item); }
   

@@ -96,6 +96,7 @@ public class MoviesContentProvider extends ContentProvider {
         long id = mDbHelper.getWritableDatabase().insert(FavoriteMovies.TABLE_NAME, null, values);
         if (id >= 0) {
           uri = Uri.withAppendedPath(uri, String.valueOf(id));
+          getContext().getContentResolver().notifyChange(uri, null);
           return uri;
         }
         throw new SQLException("Failed to insert: " + uri);
@@ -111,7 +112,7 @@ public class MoviesContentProvider extends ContentProvider {
    * @param uri           URI for a whole table or single row.
    * @param selection     WHERE clause.
    * @param selectionArgs WHERE arguments.
-   * @return
+   * @return Number of rows affected.
    */
   @Override
   public int delete (Uri uri, String selection, String[] selectionArgs) {
@@ -130,13 +131,16 @@ public class MoviesContentProvider extends ContentProvider {
         throw new UnsupportedOperationException(uri.toString());
     }
     
-    return mDbHelper.getWritableDatabase().delete(FavoriteMovies.TABLE_NAME, selection, selectionArgs);
+    int rowsAffected = mDbHelper.getWritableDatabase().delete(FavoriteMovies.TABLE_NAME, selection, selectionArgs);
+    if (rowsAffected > 0) {
+      getContext().getContentResolver().notifyChange(uri, null);
+    }
+    return rowsAffected;
   }
   
   
   @Override
   public String getType (Uri uri) {
-    // TODO: Implement this to handle requests for the MIME type of the data at the given URI.
     throw new UnsupportedOperationException("Not yet implemented");
   }
 }

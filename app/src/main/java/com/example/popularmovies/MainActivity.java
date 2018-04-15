@@ -1,7 +1,11 @@
 package com.example.popularmovies;
 
+import android.app.LoaderManager;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.Loader;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -16,6 +20,7 @@ import android.view.View;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.example.popularmovies.db.MoviesContract;
 import com.example.popularmovies.db.SavedMovieInfo;
 import com.example.popularmovies.themoviedb.Api3;
 import com.example.popularmovies.themoviedb.TmdbMoviesPage;
@@ -25,12 +30,14 @@ import static android.support.v7.widget.RecyclerView.NO_POSITION;
 
 
 public class MainActivity extends AppCompatActivity
-  implements Response.ErrorListener, Response.Listener<TmdbMoviesPage>, MoviesListAdapter.OnClickListener {
+  implements Response.ErrorListener, Response.Listener<TmdbMoviesPage>, MoviesListAdapter.OnClickListener, LoaderManager.LoaderCallbacks<Cursor> {
   
-  private static final String TAG = MainActivity.class.getSimpleName();
+  private static final String TAG = Options.XTAG + MainActivity.class.getSimpleName();
   
   // Saved instance state keys.
   private static final String SAVED_KEY_POSITION = "pos";
+  
+  private static final int MOVIES_LOADER_ID = 1;
   
   private Api3 api3;
   
@@ -68,14 +75,19 @@ public class MainActivity extends AppCompatActivity
     Options.CurrentTab currentTab = Options.getInstance(this).getCurrentTab();
     setDynamicTitle(currentTab);
     
-    // Begin network request.
-    api3 = new Api3(Secrets.THEMOVIEDB_API_KEY, this);
-    requireMovies();
-    
     // Setup "swipe to refresh".
     mSwipeRL.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {@Override public void onRefresh () {
       requireMovies();  
     }});
+    
+    // Begin network request.
+    api3 = new Api3(Secrets.THEMOVIEDB_API_KEY, this);
+    requireMovies();
+    
+    // For non-favorites tab start loader anyway to get favorites list.
+    if (Options.getInstance(MainActivity.this).getCurrentTab() != Options.CurrentTab.FAVORITES) {
+      getLoaderManager().initLoader(MOVIES_LOADER_ID, null, this);
+    }
   }
   
   
@@ -100,12 +112,13 @@ public class MainActivity extends AppCompatActivity
     super.onStop();
     if (mPageRequest != null) mPageRequest.cancel(); // Stop fetching movies list from the network.
   }
-
-
+  
+  
   private void requireMovies() {
+    mAdapter.setMovies(null, Options.getInstance(this).isFavoriteTab());
     switch (Options.getInstance(MainActivity.this).getCurrentTab()) {
       case FAVORITES:
-        // TODO: Favorite movies support.
+        getLoaderManager().restartLoader(MOVIES_LOADER_ID, null, this);
         break;
       case POPULAR:
         mPageRequest = api3.requirePopularMovies(mCurrentPage, this, this);
@@ -116,46 +129,55 @@ public class MainActivity extends AppCompatActivity
     }
     mSwipeRL.setRefreshing(true);
   }
-
-
+  
+  
   @Override
   public boolean onCreateOptionsMenu (final Menu menu) {
     getMenuInflater().inflate(R.menu.main, menu);
     return true;
   }
-
-
+  
+  
   /**
    * Set activity title based on sort order: Popular or Top Rated movies.
    */
   private void setDynamicTitle (Options.CurrentTab currentTab) {
     setTitle(currentTab.toTranslatableString(this));
   }
-
-
+  
+  
+  /**
+   * Switch main activity to ths specified tab (movies list criteria).
+   * @param tab Required tab.
+   */
+  private void switchTab (Options.CurrentTab tab) {
+    savedPosition = 0; // Force reset position to zero.
+    Options.getInstance(this).setCurrentTab(tab);
+    setDynamicTitle(tab);
+    requireMovies();
+  }
+  
+  
   @Override
   public boolean onOptionsItemSelected (final MenuItem item) {
     switch (item.getItemId()) {
       case R.id.menu_about:
         startActivity(new Intent(this, AboutActivity.class));
         return true;
+      case R.id.menu_favorites:
+        switchTab(Options.CurrentTab.FAVORITES);
+        return true;
       case R.id.menu_popular:
-        savedPosition = 0; // Force reset position to zero.
-        Options.getInstance(this).setCurrentTab(Options.CurrentTab.POPULAR);
-        setDynamicTitle(Options.CurrentTab.POPULAR);
-        requireMovies();
+        switchTab(Options.CurrentTab.POPULAR);
         return true;
       case R.id.menu_top_rated:
-        savedPosition = 0; // Force reset position to zero.
-        Options.getInstance(this).setCurrentTab(Options.CurrentTab.TOP_RATED);
-        setDynamicTitle(Options.CurrentTab.TOP_RATED);
-        requireMovies();
+        switchTab(Options.CurrentTab.TOP_RATED);
         return true;
     }
     return super.onContextItemSelected(item);
   }
-
-
+  
+  
   /**
    * Called if some error occurred while executing network request.
    * @param error
@@ -171,7 +193,19 @@ public class MainActivity extends AppCompatActivity
       }})
       .show();
   }
-
+  
+  
+  /**
+   * This code called both from network and database request completion routines to prepare
+   * activity to display received data.
+   */
+  private void finishDataLoading() {
+    mSwipeRL.setRefreshing(false);
+    mRecyclerView.setVisibility(View.VISIBLE);
+    if (savedPosition == NO_POSITION) savedPosition = 0;
+    mRecyclerView.scrollToPosition(savedPosition);
+  }
+  
   
   /**
    * Called if TMDb network request succeeds.
@@ -179,14 +213,11 @@ public class MainActivity extends AppCompatActivity
    */
   @Override
   public void onResponse (final TmdbMoviesPage response) {
-    mSwipeRL.setRefreshing(false);
-    mAdapter.setMovies(response.results, null); // TODO: In stage 2 favorites should be read from DB.
-    mRecyclerView.setVisibility(View.VISIBLE);
-    if (savedPosition == NO_POSITION) savedPosition = 0;
-    mRecyclerView.scrollToPosition(savedPosition);
+    mAdapter.setMovies(SavedMovieInfo.createArray(response.results), Options.getInstance(this).isFavoriteTab());
+    finishDataLoading();
   }
-
-
+  
+  
   /**
    * Called when RecyclerView item was clicked.
    * @param item Clicked item number.
@@ -194,10 +225,11 @@ public class MainActivity extends AppCompatActivity
   @Override
   public void onClickItem (int item) {
     Intent intent = new Intent(this, DetailsActivity.class);
-    intent.putExtra(DetailsActivity.EXTRA_MOVIE, new SavedMovieInfo(mAdapter.getMovie(item)));
+    intent.putExtra(DetailsActivity.EXTRA_MOVIE, mAdapter.getMovie(item));
     intent.putExtra(DetailsActivity.EXTRA_IS_FAVORITE, mAdapter.isFavorite(item));
     startActivity(intent);
   }
+  
   
   /**
    * Called when RecyclerView item's star (favorites mark) was clicked.
@@ -206,5 +238,28 @@ public class MainActivity extends AppCompatActivity
   @Override
   public void onClickStar (int item) {
     mAdapter.switchFavorite(item);
+  }
+  
+  
+  @Override
+  public Loader<Cursor> onCreateLoader (int id, Bundle args) {
+    if (id != MOVIES_LOADER_ID) throw new RuntimeException("Loader Not Implemented: " + id);
+    Log.d(TAG, "onCreateLoader()");
+    return new CursorLoader(this, MoviesContract.FavoriteMovies.CONTENT_URI, null, null, null, null);
+  }
+  
+  
+  @Override
+  public void onLoadFinished (Loader<Cursor> loader, Cursor cursor) {
+    Log.d(TAG, "onLoadFinished()");
+    mAdapter.swapCursor(cursor);
+    finishDataLoading();
+  }
+  
+  
+  @Override
+  public void onLoaderReset (Loader<Cursor> loader) {
+    Log.d(TAG, "onLoaderReset()");
+    mAdapter.swapCursor(null);
   }
 }

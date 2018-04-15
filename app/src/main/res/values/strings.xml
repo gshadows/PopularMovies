@@ -6,6 +6,7 @@
   <!-- Main menu -->
   <string name="top">Top</string>
   <string name="pop">Pop</string>
+  <string name="fav">Fav</string>
   <string name="about">About</string>
   
   <!-- Main page titles -->

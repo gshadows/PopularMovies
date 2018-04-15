@@ -1,6 +1,8 @@
 package com.example.popularmovies.db;
 
 
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -34,7 +36,7 @@ public class SavedMovieInfo implements Parcelable {
   
   
   /**
-   * Fill basic information from the short movie information.
+   * Construct from the short movie information.
    * @param info Short movie information.
    */
   public SavedMovieInfo (@NonNull TmdbMovieShort info) {
@@ -56,6 +58,64 @@ public class SavedMovieInfo implements Parcelable {
   
   
   /**
+   * Construct array from array of movies.
+   * @param infos Short movie information array.
+   */
+  public static SavedMovieInfo[] createArray (@NonNull TmdbMovieShort[] infos) {
+    SavedMovieInfo[] movies = new SavedMovieInfo[infos.length];
+    for (int i = 0; i < infos.length; i++) {
+      movies[i] = new SavedMovieInfo(infos[i]);
+    }
+    return movies;
+  }
+  
+  
+  /**
+   * Construct from the DB Cursor row.
+   * @param cursor    Cursor to read data from.
+   * @param position  Cursor row position.
+   * @param columnIDs Pre-cached column IDs.
+   */
+  public SavedMovieInfo (@NonNull Cursor cursor, int position, @NonNull MoviesContract.FavoriteMovies.ColumnIdHolder columnIDs) {
+    cursor.moveToPosition(position);
+    id                = cursor.getInt   (columnIDs.getId());
+    poster_path       = cursor.getString(columnIDs.getPoster());
+    backdrop_path     = cursor.getString(columnIDs.getBackdrop());
+    title             = cursor.getString(columnIDs.getTitle());
+    original_title    = cursor.getString(columnIDs.getOrigTitle());
+    original_language = cursor.getString(columnIDs.getOrigLang());
+    overview          = cursor.getString(columnIDs.getOverview());
+    release_date      = cursor.getString(columnIDs.getRelDate());
+    vote_average      = cursor.getDouble(columnIDs.getVoteAvg());
+    vote_count        = cursor.getInt   (columnIDs.getVoteCnt());
+    // Optional fields.
+    runtime = cursor.isNull(columnIDs.getRuntime()) ? null : cursor.getInt(columnIDs.getRuntime());
+  }
+  
+  
+  /**
+   * Create ContentValues to save movie into database.
+   * @return Created ContentValues.
+   */
+  public ContentValues createContentValues() {
+    ContentValues values = new ContentValues();
+    values.put (MoviesContract.FavoriteMovies._ID,           id);
+    values.put (MoviesContract.FavoriteMovies.COL_TITLE,     title);
+    values.put (MoviesContract.FavoriteMovies.COL_ORIG_TITLE,original_title);
+    values.put (MoviesContract.FavoriteMovies.COL_POSTER,    poster_path);
+    values.put (MoviesContract.FavoriteMovies.COL_BACKDROP,  backdrop_path);
+    values.put (MoviesContract.FavoriteMovies.COL_ORIG_LANG, original_language);
+    values.put (MoviesContract.FavoriteMovies.COL_OVERVIEW,  overview);
+    values.put (MoviesContract.FavoriteMovies.COL_RELEASE,   release_date);
+    values.put (MoviesContract.FavoriteMovies.COL_VOTE_AVG,  vote_average);
+    values.put (MoviesContract.FavoriteMovies.COL_VOTE_CNT,  vote_count);
+    // Optional fields.
+    values.put (MoviesContract.FavoriteMovies.COL_RUNTIME,   runtime);
+    return values;
+  }
+  
+  
+  /**
    * Fill movie details information.
    * @param details Movie details.
    */
@@ -64,6 +124,9 @@ public class SavedMovieInfo implements Parcelable {
   }
   
   
+  /**
+   * Required for Parcelable implementation.
+   */
   public static final Creator<SavedMovieInfo> CREATOR = new Creator<SavedMovieInfo>() {
     @Override
     public SavedMovieInfo createFromParcel(Parcel in) {

@@ -256,13 +256,8 @@ public class DetailsActivity extends AppCompatActivity
    * @param view Unused.
    */
   public void onStarClick (View view) {
-    // TODO: Add / remove from favorites (using content provider).
-    /*if (mBinding.starButton.isPressed()) {
-      favorites.add(mMovieInfo.id);
-    } else {
-      favorites.remove(mMovieInfo.id);
-    }*/
-    mIsFavorite = !mIsFavorite;
+    MoviesListAdapter.setFavorite(this, mMovieInfo, mIsFavorite);
+    mIsFavorite = !mIsFavorite; // Invert local favorite flag.
     updateStarButton();
   }
   

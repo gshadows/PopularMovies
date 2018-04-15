@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.popularmovies.themoviedb.TmdbVideo;
+import com.example.popularmovies.utils.Options;
 import com.squareup.picasso.Picasso;
 
 
@@ -18,7 +19,7 @@ import com.squareup.picasso.Picasso;
  * Adapter for the main activity's RecyclerView grid.
  */
 public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.ViewHolder> {
-  private static final String TAG = VideosAdapter.class.getSimpleName();
+  private static final String TAG = Options.XTAG + VideosAdapter.class.getSimpleName();
   
   public interface OnClickListener { void onClick (int item); }
   

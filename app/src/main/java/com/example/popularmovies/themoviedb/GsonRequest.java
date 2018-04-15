@@ -9,6 +9,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
+import com.example.popularmovies.utils.Options;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
@@ -20,7 +21,7 @@ import java.io.UnsupportedEncodingException;
  * @param <T> Response class.
  */
 public class GsonRequest<T> extends Request<T> {
-  private static final String TAG = GsonRequest.class.getSimpleName();
+  private static final String TAG = Options.XTAG + GsonRequest.class.getSimpleName();
 
   private final Gson mGson;
   
