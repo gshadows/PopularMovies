@@ -6,19 +6,19 @@
   <item
     android:id="@+id/menu_top_rated"
     android:title="@string/top"
-    app:showAsAction="ifRoom"
+    app:showAsAction="always"
     />
 
   <item
     android:id="@+id/menu_popular"
     android:title="@string/pop"
-    app:showAsAction="ifRoom"
+    app:showAsAction="always"
     />
 
   <item
     android:id="@+id/menu_favorites"
     android:title="@string/fav"
-    app:showAsAction="ifRoom"
+    app:showAsAction="always"
     />
 
   <item
