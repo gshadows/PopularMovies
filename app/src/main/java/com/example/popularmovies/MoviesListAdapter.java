@@ -167,7 +167,7 @@ public class MoviesListAdapter extends RecyclerView.Adapter<MoviesListAdapter.Vi
    * @param movie      Movie information.
    * @param isFavorite Is this movie should be favorite.
    */
-  public static void setFavorite (final Context context, final SavedMovieInfo movie, boolean isFavorite) {
+  public static void setFavorite (@NonNull final Context context, @NonNull final SavedMovieInfo movie, boolean isFavorite) {
     Runnable runnable;
     if (isFavorite) {
       // Remove from favorites.
@@ -191,7 +191,9 @@ public class MoviesListAdapter extends RecyclerView.Adapter<MoviesListAdapter.Vi
    * @param position Item position.
    */
   public void switchFavorite (int position) {
-    setFavorite (mContext, mMovies[position], mFavorites.contains(mMovies[position].id));
+    final SavedMovieInfo movie = getMovie(position);
+    if (movie == null) return;
+    setFavorite (mContext, movie, mFavorites.contains(movie.id));
   }
 
 
