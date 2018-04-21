@@ -131,6 +131,7 @@ public class ReviewsActivity extends AppCompatActivity
   
   
   private void requireReviews() {
+    mRecyclerView.setVisibility(View.INVISIBLE);
     mPageRequest =  api3.requireMovieReviews(mMovieId, mCurrentPage, this, this);
     mSwipeRL.setRefreshing(true);
   }

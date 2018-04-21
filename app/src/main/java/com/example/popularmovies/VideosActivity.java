@@ -135,6 +135,7 @@ public class VideosActivity extends AppCompatActivity
   
   
   private void requireVideos () {
+    mRecyclerView.setVisibility(View.INVISIBLE);
     mPageRequest = api3.requireMovieVideos(mMovieId, mCurrentPage, this, this);
     mSwipeRL.setRefreshing(true);
   }

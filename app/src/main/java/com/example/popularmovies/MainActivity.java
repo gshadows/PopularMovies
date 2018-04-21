@@ -115,6 +115,7 @@ public class MainActivity extends AppCompatActivity
   
   
   private void requireMovies() {
+    mRecyclerView.setVisibility(View.INVISIBLE);
     mAdapter.setMovies(null, Options.getInstance(this).isFavoriteTab());
     switch (Options.getInstance(MainActivity.this).getCurrentTab()) {
       case FAVORITES:
