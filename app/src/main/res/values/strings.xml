@@ -4,9 +4,9 @@
   <string name="app_name">PopularMovies</string>
   
   <!-- Main menu -->
-  <string name="top">Top</string>
-  <string name="pop">Pop</string>
-  <string name="fav">Fav</string>
+  <string name="top">TOP</string>
+  <string name="pop">POP</string>
+  <string name="fav">FAV</string>
   <string name="about">About</string>
   
   <!-- Main page titles -->
