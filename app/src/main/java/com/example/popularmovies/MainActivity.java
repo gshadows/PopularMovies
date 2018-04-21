@@ -102,8 +102,10 @@ public class MainActivity extends AppCompatActivity
   @Override
   protected void onSaveInstanceState (Bundle outState) {
     super.onSaveInstanceState(outState);
-    if (savedPosition != NO_POSITION) savedPosition = getRecyclerViewPosition();
-    outState.putInt(SAVED_KEY_POSITION, savedPosition);
+    if (savedPosition != NO_POSITION) {
+      savedPosition = getRecyclerViewPosition();
+      outState.putInt(SAVED_KEY_POSITION, savedPosition);
+    }
   }
   
   
@@ -238,6 +240,7 @@ public class MainActivity extends AppCompatActivity
    */
   @Override
   public void onClickStar (int item) {
+    savedPosition = getRecyclerViewPosition();
     mAdapter.switchFavorite(item);
   }
   
