@@ -173,7 +173,7 @@ public class MoviesListAdapter extends RecyclerView.Adapter<MoviesListAdapter.Vi
       // Remove from favorites.
       runnable = new Runnable() { @Override public void run () {
         int count = context.getContentResolver().delete(MoviesContract.FavoriteMovies.buildMovieUriById(movie.id), null, null);
-        Log.d(TAG, "setFavorite() detele returned " + count);
+        Log.d(TAG, "setFavorite() delete returned " + count);
       }};
     } else {
       // Add to favorites.
@@ -191,6 +191,12 @@ public class MoviesListAdapter extends RecyclerView.Adapter<MoviesListAdapter.Vi
    * @param position Item position.
    */
   public void switchFavorite (int position) {
+    if (mMovies == null) {
+      Log.e(TAG, "switchFavorite() mMovies is null, pos = " + position);
+    }
+    if (position >= mMovies.length) {
+      Log.e(TAG, "switchFavorite() pos = " + position + " outside mMovies size " + mMovies.length);
+    }
     setFavorite (mContext, mMovies[position], mFavorites.contains(mMovies[position].id));
   }
 

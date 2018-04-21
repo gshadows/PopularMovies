@@ -6,9 +6,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.example.popularmovies.utils.Options;
+
 
 public class ReadReviewActivity extends AppCompatActivity {
-  public static final String TAG = ReadReviewActivity.class.getSimpleName();
+  public static final String TAG = Options.XTAG + ReadReviewActivity.class.getSimpleName();
   
   public static final String EXTRA_TITLE  = "title";
   public static final String EXTRA_AUTHOR = "author";

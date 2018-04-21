@@ -26,7 +26,7 @@ import com.squareup.picasso.Picasso;
 public class DetailsActivity extends AppCompatActivity
   implements Response.ErrorListener, Response.Listener<TmdbMovieDetails> {
 
-  public static final String TAG = DetailsActivity.class.getSimpleName();
+  public static final String TAG = Options.XTAG + DetailsActivity.class.getSimpleName();
   
   public static final String EXTRA_MOVIE       = "movie";
   public static final String EXTRA_IS_FAVORITE = "is_fav";
