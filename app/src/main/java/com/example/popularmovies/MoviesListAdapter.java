@@ -178,7 +178,7 @@ public class MoviesListAdapter extends RecyclerView.Adapter<MoviesListAdapter.Vi
     } else {
       // Add to favorites.
       runnable = new Runnable() { @Override public void run () {
-        Uri uri = context.getContentResolver().insert(MoviesContract.FavoriteMovies.buildMovieUriById(movie.id), movie.createContentValues());
+        Uri uri = context.getContentResolver().insert(MoviesContract.FavoriteMovies.CONTENT_URI, movie.createContentValues());
         Log.d(TAG, "setFavorite() insert returned " + uri.toString());
       }};
     }

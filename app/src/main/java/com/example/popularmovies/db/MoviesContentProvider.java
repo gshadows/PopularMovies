@@ -14,7 +14,7 @@ import static com.example.popularmovies.db.MoviesContract.FavoriteMovies;
 
 
 public class MoviesContentProvider extends ContentProvider {
-  public static final String TAG = Options.XTAG + MoviesContentProvider.class.getSimpleName();
+  //public static final String TAG = Options.XTAG + MoviesContentProvider.class.getSimpleName();
   
   private static final int CODE_MOVIES       = 100;
   private static final int CODE_MOVIE_BY_ID  = CODE_MOVIES + 1;
@@ -53,14 +53,12 @@ public class MoviesContentProvider extends ContentProvider {
     switch (mUriMatcher.match(uri)) {
       case CODE_MOVIES:
         // Require all records "as is".
-        Log.d(TAG, "query ALL");
         break;
     
       case CODE_MOVIE_BY_ID:
         // Add filtering by ID.
         selection = FavoriteMovies._ID + " = ?";
         selectionArgs = new String[]{ uri.getLastPathSegment() };
-        Log.d(TAG, "query " + selectionArgs[0]);
         break;
     
       default:
@@ -69,7 +67,6 @@ public class MoviesContentProvider extends ContentProvider {
     
     Cursor cursor = mDbHelper.getReadableDatabase().query(FavoriteMovies.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
     cursor.setNotificationUri(getContext().getContentResolver(), uri);
-    Log.d(TAG, "query rows in answer: " + cursor.getCount());
     return cursor;
   }
   
@@ -97,7 +94,7 @@ public class MoviesContentProvider extends ContentProvider {
   @Override
   public Uri insert (Uri uri, ContentValues values) {
     switch (mUriMatcher.match(uri)) {
-      case CODE_MOVIE_BY_ID:
+      case CODE_MOVIES:
         // Add filtering by ID.
         long id = mDbHelper.getWritableDatabase().insert(FavoriteMovies.TABLE_NAME, null, values);
         if (id >= 0) {
