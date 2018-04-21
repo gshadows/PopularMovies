@@ -173,13 +173,11 @@ public class MoviesListAdapter extends RecyclerView.Adapter<MoviesListAdapter.Vi
       // Remove from favorites.
       runnable = new Runnable() { @Override public void run () {
         int count = context.getContentResolver().delete(MoviesContract.FavoriteMovies.buildMovieUriById(movie.id), null, null);
-        Log.d(TAG, "setFavorite() delete returned " + count);
       }};
     } else {
       // Add to favorites.
       runnable = new Runnable() { @Override public void run () {
         Uri uri = context.getContentResolver().insert(MoviesContract.FavoriteMovies.CONTENT_URI, movie.createContentValues());
-        Log.d(TAG, "setFavorite() insert returned " + uri.toString());
       }};
     }
     new Thread(runnable).run(); // After completion, CursorLoader should be reloaded automatically, causing notifyDatasetChanged() call.

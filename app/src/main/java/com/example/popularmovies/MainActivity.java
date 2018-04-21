@@ -248,14 +248,12 @@ public class MainActivity extends AppCompatActivity
   @Override
   public Loader<Cursor> onCreateLoader (int id, Bundle args) {
     if (id != MOVIES_LOADER_ID) throw new RuntimeException("Loader Not Implemented: " + id);
-    Log.d(TAG, "onCreateLoader()");
     return new CursorLoader(this, MoviesContract.FavoriteMovies.CONTENT_URI, null, null, null, null);
   }
   
   
   @Override
   public void onLoadFinished (Loader<Cursor> loader, Cursor cursor) {
-    Log.d(TAG, "onLoadFinished()");
     mAdapter.swapCursor(cursor);
     finishDataLoading();
   }
@@ -263,7 +261,6 @@ public class MainActivity extends AppCompatActivity
   
   @Override
   public void onLoaderReset (Loader<Cursor> loader) {
-    Log.d(TAG, "onLoaderReset()");
     mAdapter.swapCursor(null);
   }
 }

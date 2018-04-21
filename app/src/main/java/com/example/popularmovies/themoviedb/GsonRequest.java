@@ -42,7 +42,6 @@ public class GsonRequest<T> extends Request<T> {
     mGson = new Gson();
     mListener = listener;
     mRequestClass = cl;
-    //Log.d (TAG, "GsonRequest(): " + url);
   }
 
 
