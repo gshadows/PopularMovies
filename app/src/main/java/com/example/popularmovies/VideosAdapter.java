@@ -159,7 +159,9 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.ViewHolder
     
     @Override
     public void onClick (View view) {
-      mClickListener.onClick(getAdapterPosition());
+      int position = getAdapterPosition();
+      if (position < 0) return; // Too late, clicked element already destroyed.
+      mClickListener.onClick(position);
     }
   }
 }

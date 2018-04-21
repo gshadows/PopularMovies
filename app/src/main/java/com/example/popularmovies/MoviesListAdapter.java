@@ -191,12 +191,6 @@ public class MoviesListAdapter extends RecyclerView.Adapter<MoviesListAdapter.Vi
    * @param position Item position.
    */
   public void switchFavorite (int position) {
-    if (mMovies == null) {
-      Log.e(TAG, "switchFavorite() mMovies is null, pos = " + position);
-    }
-    if (position >= mMovies.length) {
-      Log.e(TAG, "switchFavorite() pos = " + position + " outside mMovies size " + mMovies.length);
-    }
     setFavorite (mContext, mMovies[position], mFavorites.contains(mMovies[position].id));
   }
 
@@ -276,6 +270,7 @@ public class MoviesListAdapter extends RecyclerView.Adapter<MoviesListAdapter.Vi
     @Override
     public void onClick (View view) {
       int position = getAdapterPosition();
+      if (position < 0) return; // Too late, clicked element already destroyed.
       if (view == mStarIB) {
         updateStarButton(position);
         mClickListener.onClickStar(position);
