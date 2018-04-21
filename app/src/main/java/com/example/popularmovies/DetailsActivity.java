@@ -1,5 +1,6 @@
 package com.example.popularmovies;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
@@ -8,9 +9,16 @@ import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -30,7 +38,7 @@ public class DetailsActivity extends AppCompatActivity
   
   public static final String EXTRA_MOVIE       = "movie";
   public static final String EXTRA_IS_FAVORITE = "is_fav";
-
+  
   private ActivityDetailsBinding mBinding;
   private SavedMovieInfo mMovieInfo;
   //private Set<Integer> favorites = new HashSet<>(); // Will be used if details activity allows swipe to multiple movies.
@@ -61,9 +69,78 @@ public class DetailsActivity extends AppCompatActivity
     // Favorite button star.
     updateStarButton();
     
+    // Setup tabs / view pager.
+    ViewPager viewPager = findViewById(R.id.details_pager);
+    viewPager.setAdapter (new DetailsTabAdapter(this));
+    TabLayout tabLayout = findViewById(R.id.details_tabs);
+    tabLayout.setupWithViewPager(viewPager);
+    //viewPager.setCurrentItem(savedTab...);
+    
     // Begin network request for movie details.
     api3 = new Api3(Secrets.THEMOVIEDB_API_KEY, this);
     requireMovieDetails();
+  }
+  
+  
+  private static final class DetailsTabAdapter extends PagerAdapter {
+  
+    public static final int PAGE_DESCRIPTION = 0;
+    public static final int PAGE_REVIEWS     = 1;
+    public static final int PAGE_VIDEOS      = 2;
+    
+    private final Context mContext;
+    private String mDescription = null;
+  
+    public DetailsTabAdapter (Context context) { mContext = context; }
+    
+    @Override public int getCount() { return 3; } // Description, Reviews and Videos.
+    
+    @Override public boolean isViewFromObject (View view, Object object) { return view == object; }
+    
+    @Override public void destroyItem (ViewGroup container, int position, Object object) { container.removeView((View)object); }
+    
+    @Override public Object instantiateItem (ViewGroup container, int position) {
+      LayoutInflater inflater = LayoutInflater.from(mContext);
+      View view;
+      switch (position) {
+        case PAGE_DESCRIPTION:
+          view = inflater.inflate(R.layout.details_page_description, container, true);
+          TextView tvDescription = container.findViewById(R.id.description_tv);
+          if (tvDescription != null) tvDescription.setText(mDescription);
+          break;
+        case PAGE_REVIEWS:
+          view = inflater.inflate(R.layout.activity_with_recyclerview, container, true);
+          RecyclerView rv
+          break;
+        case PAGE_VIDEOS:
+          view = inflater.inflate(R.layout.activity_with_recyclerview, container, true);
+          break;
+        default: return null; // No such page.
+      }
+      return view;
+    }
+  
+    @Override public CharSequence getPageTitle (int position) {
+      switch (position) {
+        case PAGE_DESCRIPTION: return mContext.getString(R.string.summary);
+        case PAGE_REVIEWS:     return mContext.getString(R.string.reviews);
+        case PAGE_VIDEOS:      return mContext.getString(R.string.videos);
+        default: return null;
+      }
+    }
+  
+    @Override public void setPrimaryItem (ViewGroup container, int position, Object object) {
+      super.setPrimaryItem (container, position, object);
+      if (position == PAGE_DESCRIPTION) {
+        TextView tvDescription = (TextView)object; // object - The same object that was returned by instantiateItem().
+        tvDescription.setText(mDescription);
+      }
+    }
+  
+    public void setDescription (String text) {
+      mDescription = text;
+      notifyDataSetChanged();
+    }
   }
   
   
@@ -184,7 +261,11 @@ public class DetailsActivity extends AppCompatActivity
     mBinding.rateTv.setText(getString(R.string.rate) + String.valueOf(mMovieInfo.vote_average) + " / 10");
     
     // Set description.
-    if (mMovieInfo.overview != null) mBinding.descriptionTv.setText("    " + mMovieInfo.overview);
+    if (mMovieInfo.overview != null) {
+      DetailsTabAdapter adapter = (DetailsTabAdapter)mBinding.detailsPager.getAdapter();
+      if (adapter != null) adapter.setDescription(mMovieInfo.overview);
+    }
+    //if (mMovieInfo.overview != null) mBinding.descriptionTv.setText(mMovieInfo.overview);
     
     // Try to show details if it was passed from the DB.
     showDetailedInfo();
