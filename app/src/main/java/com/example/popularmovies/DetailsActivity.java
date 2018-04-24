@@ -30,22 +30,39 @@ import com.example.popularmovies.themoviedb.TmdbMovieDetails;
 import com.example.popularmovies.utils.Options;
 import com.squareup.picasso.Picasso;
 
+import lombok.Getter;
+
 
 public class DetailsActivity extends AppCompatActivity
-  implements Response.ErrorListener, Response.Listener<TmdbMovieDetails> {
+  implements  Response.ErrorListener,
+              Response.Listener<TmdbMovieDetails> {
 
   public static final String TAG = Options.XTAG + DetailsActivity.class.getSimpleName();
   
   public static final String EXTRA_MOVIE       = "movie";
   public static final String EXTRA_IS_FAVORITE = "is_fav";
   
+  
+  /**
+   * Details activity pages description enumeration.
+   */
+  public enum Page {
+    DESCRIPTION (R.string.summary, R.layout.details_page_description),
+    REVIEWS     (R.string.reviews, R.layout.activity_with_recyclerview),
+    VIDEOS      (R.string.videos,  R.layout.activity_with_recyclerview);
+    
+    @Getter private final int titleId, layoutId;
+    Page (int titleId, int layoutId) { this.titleId = titleId; this.layoutId = layoutId; }
+  }
+  
   private ActivityDetailsBinding mBinding;
   private SavedMovieInfo mMovieInfo;
-  //private Set<Integer> favorites = new HashSet<>(); // Will be used if details activity allows swipe to multiple movies.
   private boolean mIsFavorite;
   
   private Api3 api3;
   private Request<TmdbMovieDetails> mDetailsRequest = null;
+  
+  private DetailsTabAdapter mTabAdapter;
   
   private boolean mIsLandscape;
   
@@ -69,9 +86,16 @@ public class DetailsActivity extends AppCompatActivity
     // Favorite button star.
     updateStarButton();
     
-    // Setup tabs / view pager.
+    // Setup movie information pages (tabs).
     ViewPager viewPager = findViewById(R.id.details_pager);
-    viewPager.setAdapter (new DetailsTabAdapter(this));
+    mTabAdapter = new DetailsTabAdapter(this, new DetailsTabAdapter.PageSwitchedListener() {
+      @Override public void onPageSwitched (Page page) {
+        if (page == Page.DESCRIPTION) {
+          updateDescription();
+        }
+      }
+    });
+    viewPager.setAdapter (mTabAdapter);
     TabLayout tabLayout = findViewById(R.id.details_tabs);
     tabLayout.setupWithViewPager(viewPager);
     //viewPager.setCurrentItem(savedTab...);
@@ -83,63 +107,79 @@ public class DetailsActivity extends AppCompatActivity
   
   
   private static final class DetailsTabAdapter extends PagerAdapter {
+    interface PageSwitchedListener { void onPageSwitched (Page page); }
   
-    public static final int PAGE_DESCRIPTION = 0;
-    public static final int PAGE_REVIEWS     = 1;
-    public static final int PAGE_VIDEOS      = 2;
-    
     private final Context mContext;
-    private String mDescription = null;
+    private PageSwitchedListener mListener;
+    
+    public TextView mDescriptionTV = null;
+    public RecyclerView mReviewsRV = null;
+    public RecyclerView mVideosRV  = null;
   
-    public DetailsTabAdapter (Context context) { mContext = context; }
+    public DetailsTabAdapter (Context context, PageSwitchedListener listener) {
+      mContext = context;
+      mListener = listener;
+    }
     
-    @Override public int getCount() { return 3; } // Description, Reviews and Videos.
-    
+    @Override public int getCount() { return Page.values().length; }
     @Override public boolean isViewFromObject (View view, Object object) { return view == object; }
     
-    @Override public void destroyItem (ViewGroup container, int position, Object object) { container.removeView((View)object); }
+    @Override public void destroyItem (ViewGroup container, int position, Object object) {
+      Log.d(TAG, "DetailsTabAdapter.destroyItem() pos " + position);
+      container.removeView((View)object);
+    }
+    
+    private boolean checkPosition (String source, int position) {
+      if ((position < 0) || (position >= Page.values().length)) {
+        Log.e(TAG, String.format("DetailsTabAdapter.%s() bad position %d", source, position));
+        return false;
+      }
+      return true;
+    }
     
     @Override public Object instantiateItem (ViewGroup container, int position) {
-      LayoutInflater inflater = LayoutInflater.from(mContext);
-      View view;
-      switch (position) {
-        case PAGE_DESCRIPTION:
-          view = inflater.inflate(R.layout.details_page_description, container, true);
-          TextView tvDescription = container.findViewById(R.id.description_tv);
-          if (tvDescription != null) tvDescription.setText(mDescription);
-          break;
-        case PAGE_REVIEWS:
-          view = inflater.inflate(R.layout.activity_with_recyclerview, container, true);
-          RecyclerView rv
-          break;
-        case PAGE_VIDEOS:
-          view = inflater.inflate(R.layout.activity_with_recyclerview, container, true);
-          break;
-        default: return null; // No such page.
+      if (!checkPosition ("instantiateItem", position)) return null;
+      Log.d(TAG, "DetailsTabAdapter.instantiateItem() pos " + position);
+      
+      Page page = Page.values()[position];
+      View view = LayoutInflater.from(mContext).inflate(page.getLayoutId(), container, true);
+      
+      Log.d(TAG, "DetailsTabAdapter.instantiateItem() " + position + " -> " + mContext.getString(page.getTitleId()));
+      
+      // Initialize pages.
+      if (page == Page.DESCRIPTION) {
+        
+        // Description contains a text field.
+        mDescriptionTV = container.findViewById(R.id.description_tv);
+        if (mDescriptionTV == null) Log.w (TAG, "instantiateItem(): description_tv not found");
+        
+      } else {
+        
+        RecyclerView rv = container.findViewById(R.id.main_recyclerview);
+        if (rv == null) {
+          Log.w (TAG, "instantiateItem(): main_recyclerview not found");
+        } else if (page == Page.REVIEWS) {
+          mReviewsRV = rv;
+        } else if (page == Page.VIDEOS) {
+          mVideosRV = rv;
+        } else {
+          Log.w (TAG, "instantiateItem(): this page number was missed in code: " + position);
+        }
       }
+      
       return view;
     }
   
     @Override public CharSequence getPageTitle (int position) {
-      switch (position) {
-        case PAGE_DESCRIPTION: return mContext.getString(R.string.summary);
-        case PAGE_REVIEWS:     return mContext.getString(R.string.reviews);
-        case PAGE_VIDEOS:      return mContext.getString(R.string.videos);
-        default: return null;
-      }
+      if (!checkPosition ("getPageTitle", position)) return null;
+      Log.d(TAG, "DetailsTabAdapter.getPageTitle() " + position + " -> " + mContext.getString(Page.values()[position].getTitleId()));
+      return mContext.getString(Page.values()[position].getTitleId());
     }
   
     @Override public void setPrimaryItem (ViewGroup container, int position, Object object) {
+      Log.d(TAG, "DetailsTabAdapter.setPrimaryItem() pos " + position);
       super.setPrimaryItem (container, position, object);
-      if (position == PAGE_DESCRIPTION) {
-        TextView tvDescription = (TextView)object; // object - The same object that was returned by instantiateItem().
-        tvDescription.setText(mDescription);
-      }
-    }
-  
-    public void setDescription (String text) {
-      mDescription = text;
-      notifyDataSetChanged();
+      mListener.onPageSwitched(Page.values()[position]);
     }
   }
   
@@ -261,11 +301,7 @@ public class DetailsActivity extends AppCompatActivity
     mBinding.rateTv.setText(getString(R.string.rate) + String.valueOf(mMovieInfo.vote_average) + " / 10");
     
     // Set description.
-    if (mMovieInfo.overview != null) {
-      DetailsTabAdapter adapter = (DetailsTabAdapter)mBinding.detailsPager.getAdapter();
-      if (adapter != null) adapter.setDescription(mMovieInfo.overview);
-    }
-    //if (mMovieInfo.overview != null) mBinding.descriptionTv.setText(mMovieInfo.overview);
+    updateDescription();
     
     // Try to show details if it was passed from the DB.
     showDetailedInfo();
@@ -279,6 +315,20 @@ public class DetailsActivity extends AppCompatActivity
   private void showDetailedInfo() {
     // Set movie length.
     if (mMovieInfo.runtime != null) mBinding.lengthTv.setText(getString(R.string.length) + mMovieInfo.runtime + getString(R.string.minutes_short));
+  }
+  
+  
+  /**
+   * Show movie description when corresponding page dislayed.
+   */
+  private void updateDescription() {
+    Log.d(TAG, "updateDescription()");
+    if (mMovieInfo == null) return;
+    if (mMovieInfo.overview == null) return;
+    DetailsTabAdapter adapter = (DetailsTabAdapter)mBinding.detailsPager.getAdapter();
+    Log.d(TAG, "updateDescription() will set description to the adapter " + adapter);
+    if (adapter == null) return;
+    adapter.mDescriptionTV.setText(mMovieInfo.overview);
   }
   
   
