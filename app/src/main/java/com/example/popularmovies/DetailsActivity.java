@@ -167,7 +167,7 @@ public class DetailsActivity extends AppCompatActivity
     mRecyclerView.setHasFixedSize(false); // Some video descriptions could be longer then one line.
   
     // Begin network request for movie details.
-    api3 = new Api3(Secrets.THEMOVIEDB_API_KEY, this);
+    api3 = new Api3(BuildConfig.THEMOVIEDB_API_KEY, this);
     requireMovieDetails();
   
     // Setup tabs.

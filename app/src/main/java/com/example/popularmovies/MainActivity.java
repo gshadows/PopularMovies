@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity
     }});
     
     // Begin network request.
-    api3 = new Api3(Secrets.THEMOVIEDB_API_KEY, this);
+    api3 = new Api3(BuildConfig.THEMOVIEDB_API_KEY, this);
     requireMovies();
     
     // For non-favorites tab start loader anyway to get favorites list.
