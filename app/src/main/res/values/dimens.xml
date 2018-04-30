@@ -7,4 +7,7 @@
 
   <dimen name="detail_column_text_size">24sp</dimen>
   <dimen name="detail_rate_text_size">16sp</dimen>
+  
+  <dimen name="details_star_width">64dp</dimen>
+  <dimen name="details_star_height">64dp</dimen>
 </resources>

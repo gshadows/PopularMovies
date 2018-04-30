@@ -16,7 +16,7 @@
     android:textSize="20sp"
     android:textColor="@color/colorAccent"
     android:gravity="center_horizontal"
-    android:textIsSelectable="true"
+    android:textIsSelectable="false"
     tools:text="NorthenReviewer1234"
     />
 
@@ -26,7 +26,7 @@
     android:layout_height="wrap_content"
     android:textSize="20sp"
     android:textColor="@color/colorPrimaryLight"
-    android:textIsSelectable="true"
+    android:textIsSelectable="false"
     tools:text="Nobody knows, but our world balancing on the edge of the Darkness. Only true mage could return stolen relic of ..."
     />
   

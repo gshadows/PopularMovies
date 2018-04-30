@@ -3,6 +3,7 @@ package com.example.popularmovies;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
@@ -19,6 +20,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -26,6 +28,7 @@ import com.android.volley.VolleyError;
 import com.example.popularmovies.db.SavedMovieInfo;
 import com.example.popularmovies.themoviedb.Api3;
 import com.example.popularmovies.themoviedb.TmdbMovieDetails;
+import com.example.popularmovies.themoviedb.TmdbReview;
 import com.example.popularmovies.themoviedb.TmdbReviewsPage;
 import com.example.popularmovies.themoviedb.TmdbVideosPage;
 import com.example.popularmovies.utils.Options;
@@ -53,6 +56,8 @@ public class DetailsActivity extends AppCompatActivity
   public static final String EXTRA_MOVIE       = "movie";
   public static final String EXTRA_IS_FAVORITE = "is_fav";
   
+  private Toast mToast = null;
+  
   
   /**
    * Details activity pages description enumeration.
@@ -79,7 +84,7 @@ public class DetailsActivity extends AppCompatActivity
   TabLayout     mTabLayout;
   View          mPageDescription;
   RecyclerView  mRecyclerView;
-  TextView      mTitleTV, mDescriptionTV, mYearTV, mLengthTV, mRateTV;
+  TextView      mTitleTV, mOrigTitleTV, mDescriptionTV, mYearTV, mLengthTV, mRateTV;
   ImageView     mPosterIV, mBackgroundIV, mStarIV;
   SwipeRefreshLayout mSwipeRL;
   
@@ -130,6 +135,7 @@ public class DetailsActivity extends AppCompatActivity
     mPageDescription  = findViewByIdOrDie(R.id.description_page);
     mRecyclerView     = findViewByIdOrDie(R.id.main_recyclerview);
     mTitleTV          = findViewByIdOrDie(R.id.title_tv);
+    mOrigTitleTV      = findViewByIdOrDie(R.id.original_tv);
     mDescriptionTV    = findViewByIdOrDie(R.id.description_tv);
     mYearTV           = findViewByIdOrDie(R.id.year_tv);
     mLengthTV         = findViewByIdOrDie(R.id.length_tv);
@@ -169,7 +175,7 @@ public class DetailsActivity extends AppCompatActivity
     mTabLayout.addTab(mTabLayout.newTab().setText(Page.VIDEOS.titleId));
     mTabLayout.addOnTabSelectedListener(this);
     mTabLayout.getTabAt(mCurrentTab.ordinal()).select();
-    updateCurrentTab();
+    updateTab(mCurrentTab);
     
     // Favorite button star.
     updateStarButton();
@@ -181,13 +187,14 @@ public class DetailsActivity extends AppCompatActivity
   }
   
   
-  private void updateCurrentTab() {
-    if (mCurrentTab == Page.DESCRIPTION) {
+  private void updateTab (Page page) {
+    if (page != mCurrentTab) return; // Do not update invisible tabs.
+    if (page == Page.DESCRIPTION) {
       mRecyclerView.setVisibility(View.INVISIBLE);
       mPageDescription.setVisibility(View.VISIBLE);
     } else {
       mPageDescription.setVisibility(View.INVISIBLE);
-      mRecyclerView.setAdapter ((mCurrentTab == Page.REVIEWS) ? mReviewsAdapter : mVideosAdapter);
+      mRecyclerView.setAdapter ((page == Page.REVIEWS) ? mReviewsAdapter : mVideosAdapter);
       mRecyclerView.setVisibility(View.VISIBLE);
     }
   }
@@ -197,7 +204,7 @@ public class DetailsActivity extends AppCompatActivity
   public void onTabSelected (TabLayout.Tab tab) {
     mCurrentTab = Page.values()[tab.getPosition()];
     Log.d(TAG, "onTabSelected() - " + mCurrentTab.ordinal());
-    updateCurrentTab();
+    updateTab(mCurrentTab);
   }
   
   @Override public void onTabUnselected (TabLayout.Tab tab) {} // Unused.
@@ -212,6 +219,7 @@ public class DetailsActivity extends AppCompatActivity
   @Override
   protected void onStop () {
     super.onStop();
+    if (mToast != null) mToast.cancel();
     if (mDetailsRequest != null) mDetailsRequest.cancel(); // Stop fetching movie details from the network.
     if (mReviewsRequest != null) mReviewsRequest.cancel(); // Stop fetching movie reviews from the network.
     if (mVideosRequest  != null) mVideosRequest.cancel();  // Stop fetching movie videos  from the network.
@@ -224,26 +232,26 @@ public class DetailsActivity extends AppCompatActivity
     // Require movie details.
     mDetailsRequest = api3.requireMovieDetails(mMovieInfo.id, new Response.Listener<TmdbMovieDetails>() {
       @Override public void onResponse (TmdbMovieDetails response) {
-        Log.d(TAG,"onResponse() - details");
         mSwipeRL.setRefreshing(false);
         mMovieInfo.setDetails(response);
         showDetailedInfo();
+        updateTab(Page.DESCRIPTION);
       }
     }, this);
     
     // Require movie reviews.
     mReviewsRequest = api3.requireMovieReviews(mMovieInfo.id, mCurrentReviewsPage, new Response.Listener<TmdbReviewsPage>() {
       @Override public void onResponse (TmdbReviewsPage response) {
-        Log.d(TAG,"onResponse() - reviews");
         mReviewsAdapter.setReviews(response.results);
+        updateTab(Page.REVIEWS);
       }
     }, this);
     
     // Require movie videos.
     mVideosRequest = api3.requireMovieVideos(mMovieInfo.id, mCurrentVideosPage, new Response.Listener<TmdbVideosPage>() {
       @Override public void onResponse (TmdbVideosPage response) {
-        Log.d(TAG,"onResponse() - videos");
         mVideosAdapter.setVideos(response.results);
+        updateTab(Page.VIDEOS);
       }
     }, this);
     
@@ -278,6 +286,36 @@ public class DetailsActivity extends AppCompatActivity
     
     return true;
   }
+  
+  
+  /**
+   * Show movie title in the TextView and top of screen.
+   * Use original title if no localized title available.
+   * Show original title in separate TextView, if available.
+   */
+  private void showMovieTitle () {
+    String title;
+    
+    // Select what to use as main movie title. Prefer localized title.
+    if (mMovieInfo.title != null) {
+      title = mMovieInfo.title;
+    } else if (mMovieInfo.original_title != null) {
+      title = mMovieInfo.original_title;
+    } else {
+      title = "(untitled movie)";
+    }
+  
+    setTitle(title);
+    mTitleTV.setText(title);
+    
+    // Show original title only if exists and differs from localized one.
+    if ((mMovieInfo.original_title != null) && !title.equals(mMovieInfo.original_title)) {
+      mOrigTitleTV.setVisibility(View.VISIBLE);
+      mOrigTitleTV.setText(mMovieInfo.original_title);
+    } else {
+      mOrigTitleTV.setVisibility(View.GONE);
+    }
+  }
 
 
   /**
@@ -286,10 +324,7 @@ public class DetailsActivity extends AppCompatActivity
   private void showMoveInfo() {
 
     // Set title.
-    if (mMovieInfo.title != null) {
-      setTitle(mMovieInfo.title);
-      mTitleTV.setText(mMovieInfo.title);
-    }
+    showMovieTitle();
     
     // Add to favorites button.
     //boolean isFavorite = favorites.contains(mMovieInfo.id);
@@ -304,13 +339,14 @@ public class DetailsActivity extends AppCompatActivity
         .into(mBackgroundIV, new com.squareup.picasso.Callback() {
           @Override public void onSuccess () {
             // When no background loaded (in case of network error or absence of image) empty
-            // background looks ugly with a large gap between top of the sceen and a title.
+            // background looks ugly with a large gap between top of the screen and a title.
             // This why I bind title to the top of screen initially and background image are invisible.
             // After successful loading I enable background and re-bind title to the bottom of it.
             // The only disadvantage is title "jumps" down if internet works good and fast. Assuming
             // success looks bad in case of slow internet (or none). Sorry for long comment :)
   
             // Enable background.
+            Log.d(TAG, "Background loaded successfully!");
             mBackgroundIV.setVisibility(View.VISIBLE);
             if (!mIsLandscape) {
               // Re-bind title text to the bottom of background image. Only for portrait orientation.
@@ -323,7 +359,9 @@ public class DetailsActivity extends AppCompatActivity
             }
           }
   
-          @Override public void onError () {} // When no background loaded title is bound to the top of screen.
+          @Override public void onError () {
+            Log.e(TAG, "Failed to load background!");
+          } // When no background loaded title is bound to the top of screen.
         });
     }
     
@@ -336,8 +374,12 @@ public class DetailsActivity extends AppCompatActivity
         .placeholder(android.R.drawable.progress_indeterminate_horizontal)
         .error(android.R.drawable.stat_notify_error)
         .into(mPosterIV, new com.squareup.picasso.Callback() {
-          @Override public void onSuccess () { mPosterIV.setContentDescription(getString(R.string.poster_content_description)); }
+          @Override public void onSuccess () {
+            Log.d(TAG, "Poster loaded successfully!");
+            mPosterIV.setContentDescription(getString(R.string.poster_content_description));
+          }
           @Override public void onError () {
+            Log.e(TAG, "Failed to load poster!");
             mPosterIV.setColorFilter(Color.RED);
             mPosterIV.setContentDescription(getString(R.string.poster_error_content_description));
           }
@@ -383,30 +425,6 @@ public class DetailsActivity extends AppCompatActivity
       }})
       .show();
   }
-
-
-  /**
-   * "Reviews" button click handler. Used to open user's movie reviews list.
-   * @param view Unused.
-   */
-  public void onReviewsClick (View view) {
-    Intent intent = new Intent(this, ReviewsActivity.class);
-    intent.putExtra(ReviewsActivity.EXTRA_MOVIE_TITLE, mMovieInfo.title);
-    intent.putExtra(ReviewsActivity.EXTRA_MOVIE_ID,    mMovieInfo.id);
-    startActivity(intent);
-  }
-  
-  
-  /**
-   * "Videos" button click handler. Used to open related videos list (trailers etc).
-   * @param view Unused.
-   */
-  public void onVideosClick (View view) {
-    Intent intent = new Intent(this, VideosActivity.class);
-    intent.putExtra(VideosActivity.EXTRA_MOVIE_TITLE, mMovieInfo.title);
-    intent.putExtra(VideosActivity.EXTRA_MOVIE_ID,    mMovieInfo.id);
-    startActivity(intent);
-  }
   
   
   /**
@@ -429,15 +447,49 @@ public class DetailsActivity extends AppCompatActivity
   }
   
   
-  @Override
-  public void onVideoClick (int item) {
-    
+  public void showWarning (String text) {
+    if (mToast != null) mToast.cancel();
+    mToast = Toast.makeText(this, text, Toast.LENGTH_LONG);
+    mToast.show();
   }
   
   
+  /**
+   * Called when RecyclerView item was clicked.
+   *
+   * @param item Clicked item number.
+   */
+  @Override
+  public void onVideoClick (int item) {
+    Log.d(TAG,"Video click: " + item);
+    String url = mVideosAdapter.getVideoURL(item);
+    if (url == null) {
+      Log.w(TAG, String.format("Video %d adapter of movie %d (%s) returned null video URI"));
+      showWarning("Unsupported video source");
+    }
+    Intent intent = new Intent(Intent.ACTION_VIEW);
+    intent.setData(Uri.parse(url));
+    if (intent.resolveActivity(getPackageManager()) != null) {
+      startActivity(intent);
+    } else {
+      
+    }
+  }
+  
+  
+  /**
+   * Called when RecyclerView item was clicked.
+   * @param item Clicked item number.
+   */
   @Override
   public void onReviewClick (int item) {
-    
+    Log.d(TAG,"Review click: " + item);
+    Intent intent = new Intent(this, ReadReviewActivity.class);
+    TmdbReview review = mReviewsAdapter.getReview(item);
+    intent.putExtra(ReadReviewActivity.EXTRA_TITLE,  mMovieInfo.title);
+    intent.putExtra(ReadReviewActivity.EXTRA_AUTHOR, review.author);
+    intent.putExtra(ReadReviewActivity.EXTRA_REVIEW, review.content);
+    startActivity(intent);
   }
   
   
