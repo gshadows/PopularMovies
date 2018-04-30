@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
-<android.support.constraint.ConstraintLayout
+<android.support.v4.widget.SwipeRefreshLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
-  android:id="@+id/details_c_layout"
+  android:id="@+id/details_swipe_layout"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   tools:context="com.example.popularmovies.DetailsActivity"
+  >
+<android.support.constraint.ConstraintLayout
+  android:id="@+id/details_c_layout"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
   >
 
   <ImageView
@@ -103,40 +107,38 @@
     app:layout_constraintTop_toBottomOf="@id/length_tv"
     />
   
-  <Button
-    android:id="@+id/reviews_button"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="@string/reviews"
-    android:paddingTop="8dp"
-    android:onClick="onReviewsClick"
-    app:layout_constraintStart_toEndOf="@id/poster_iv"
-    app:layout_constraintEnd_toStartOf="@id/videos_button"
-    app:layout_constraintTop_toBottomOf="@id/rate_tv"
-    />
-  
-  <Button
-    android:id="@+id/videos_button"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="@string/videos"
-    android:paddingTop="8dp"
-    android:onClick="onVideosClick"
-    app:layout_constraintStart_toEndOf="@id/reviews_button"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/rate_tv"
-    />
-  
-  <android.support.v4.view.ViewPager
-    android:id="@+id/details_pager"
+  <FrameLayout
     android:layout_width="0dp"
     android:layout_height="0dp"
-    android:foregroundGravity="bottom"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintTop_toBottomOf="@id/poster_iv"
     app:layout_constraintBottom_toTopOf="@id/details_tabs"
-    />
+    >
+  
+    <ScrollView
+      android:id="@+id/description_page"
+      android:layout_height="match_parent"
+      android:layout_width="match_parent"
+      android:visibility="invisible"
+      >
+      <TextView
+        android:id="@+id/description_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="12dp"
+        android:textIsSelectable="true"
+        tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+        />
+    </ScrollView>
+    
+    <android.support.v7.widget.RecyclerView
+      android:id="@+id/main_recyclerview"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:visibility="invisible"
+      />
+  </FrameLayout>
   
   <android.support.design.widget.TabLayout
     android:id="@+id/details_tabs"
@@ -149,4 +151,4 @@
     />
 
 </android.support.constraint.ConstraintLayout>
-</layout>
+</android.support.v4.widget.SwipeRefreshLayout>

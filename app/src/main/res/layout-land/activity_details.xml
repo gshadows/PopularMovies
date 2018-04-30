@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
-<android.support.constraint.ConstraintLayout
+<android.support.v4.widget.SwipeRefreshLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
-  android:id="@+id/details_c_layout"
+  android:id="@+id/details_swipe_layout"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   tools:context="com.example.popularmovies.DetailsActivity"
+  >
+<android.support.constraint.ConstraintLayout
+  android:id="@+id/details_c_layout"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
   >
 
   <ImageView
@@ -51,98 +55,130 @@
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintRight_toRightOf="parent"
     app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintBottom_toBottomOf="parent"
     />
   
   <TextView
     android:id="@+id/title_tv"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_marginEnd="8dp"
+    android:layout_marginRight="8dp"
+    android:background="#80000000"
+    android:gravity="center"
+
+    android:paddingBottom="@dimen/detail_head_margin_vertical"
     android:paddingLeft="@dimen/detail_head_margin_horizontal"
     android:paddingRight="@dimen/detail_head_margin_horizontal"
     android:paddingTop="@dimen/detail_head_margin_vertical"
-    android:paddingBottom="@dimen/detail_head_margin_vertical"
-
-    android:background="#80000000"
-    android:gravity="center"
-    android:textSize="@dimen/detail_head_text_size"
     android:textColor="@color/colorText"
+    
     android:textIsSelectable="true"
     
-    tools:text="Nightmare on Elm Street"
-    
-    app:layout_constraintStart_toEndOf="@id/poster_iv"
+    android:textSize="@dimen/detail_head_text_size"
+    app:layout_constraintEnd_toStartOf="@+id/star_button"
     app:layout_constraintLeft_toRightOf="@id/poster_iv"
-    app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintStart_toEndOf="@id/poster_iv"
     app:layout_constraintTop_toTopOf="parent"
+    tools:text="Nightmare on Elm Street"
     />
   
-  <TextView
-    android:id="@+id/year_tv"
-    style="@style/details_column"
-    android:textStyle="bold"
-    android:layout_marginTop="8dp"
-    android:padding="8dp"
-    android:background="@color/half_transparent"
-    tools:text="Year: 2014"
-    app:layout_constraintStart_toEndOf="@id/poster_iv"
-    app:layout_constraintTop_toBottomOf="@id/title_tv"
-    />
-  
-  <TextView
-    android:id="@+id/length_tv"
-    style="@style/details_column"
-    android:textStyle="italic"
-    android:padding="8dp"
-    android:background="@color/half_transparent"
-    tools:text="Length: 120 min"
-    app:layout_constraintStart_toEndOf="@id/poster_iv"
-    app:layout_constraintTop_toBottomOf="@id/year_tv"
-    />
-  
-  <TextView
-    android:id="@+id/rate_tv"
-    style="@style/details_column"
-    tools:text="Rate: 8.5/10"
-    android:padding="8dp"
-    android:background="@color/half_transparent"
-    android:textSize="@dimen/detail_rate_text_size"
-    app:layout_constraintStart_toEndOf="@id/poster_iv"
-    app:layout_constraintTop_toBottomOf="@id/length_tv"
-    />
-  
-  <Button
-    android:id="@+id/reviews_button"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="@string/reviews"
-    android:paddingTop="16dp"
-    android:onClick="onReviewsClick"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/star_button"
-    />
-  
-  <Button
-    android:id="@+id/videos_button"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="@string/videos"
-    android:paddingTop="16dp"
-    android:onClick="onVideosClick"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/reviews_button"
-    />
-  
-  <android.support.v4.view.ViewPager
-    android:id="@+id/details_pager"
+  <FrameLayout
     android:layout_width="0dp"
     android:layout_height="0dp"
-    android:foregroundGravity="bottom"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/poster_iv"
+    app:layout_constraintTop_toBottomOf="@id/title_tv"
     app:layout_constraintBottom_toTopOf="@id/details_tabs"
-    />
+    app:layout_constraintStart_toEndOf="@id/poster_iv"
+    app:layout_constraintEnd_toEndOf="parent"
+    >
+  
+    <android.support.constraint.ConstraintLayout
+      android:id="@+id/description_page"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:visibility="invisible"
+      tools:visibility="visible"
+      >
+      <TextView
+        android:id="@+id/year_tv"
+        style="@style/details_column"
+        android:textStyle="bold"
+        android:layout_marginTop="8dp"
+        android:padding="8dp"
+        android:background="@color/half_transparent"
+        tools:text="Year: 2014"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+  
+      <TextView
+        android:id="@+id/length_tv"
+        style="@style/details_column"
+        android:textStyle="italic"
+        android:padding="8dp"
+        android:background="@color/half_transparent"
+        tools:text="Length: 120 min"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/year_tv"
+        />
+  
+      <TextView
+        android:id="@+id/rate_tv"
+        style="@style/details_column"
+        tools:text="Rate: 8.5/10"
+        android:padding="8dp"
+        android:background="@color/half_transparent"
+        android:textSize="@dimen/detail_rate_text_size"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/length_tv"
+        />
+  
+      <Button
+        android:id="@+id/reviews_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/reviews"
+        android:paddingTop="16dp"
+        android:onClick="onReviewsClick"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+  
+      <Button
+        android:id="@+id/videos_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/videos"
+        android:paddingTop="16dp"
+        android:onClick="onVideosClick"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/reviews_button"
+        />
+  
+      <ScrollView
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        >
+        <TextView
+          android:id="@+id/description_tv"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:paddingTop="12dp"
+          android:textIsSelectable="true"
+          tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+          />
+      </ScrollView>
+    </android.support.constraint.ConstraintLayout>
+    
+    <android.support.v7.widget.RecyclerView
+      android:id="@+id/main_recyclerview"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:visibility="invisible"
+      tools:visibility="visible"
+      />
+  </FrameLayout>
   
   <android.support.design.widget.TabLayout
     android:id="@+id/details_tabs"
@@ -155,4 +191,4 @@
     />
   
 </android.support.constraint.ConstraintLayout>
-</layout>
+</android.support.v4.widget.SwipeRefreshLayout>

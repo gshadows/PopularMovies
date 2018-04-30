@@ -183,7 +183,7 @@ public class VideosActivity extends AppCompatActivity
    * @param item Clicked item number.
    */
   @Override
-  public void onClick (int item) {
+  public void onVideoClick (int item) {
     String url = mAdapter.getVideoURL(item);
     if (url == null) {
       

@@ -173,7 +173,7 @@ public class ReviewsActivity extends AppCompatActivity
    * @param item Clicked item number.
    */
   @Override
-  public void onClick (int item) {
+  public void onReviewClick (int item) {
     Intent intent = new Intent(this, ReadReviewActivity.class);
     TmdbReview review = mAdapter.getReview(item);
     intent.putExtra(ReadReviewActivity.EXTRA_TITLE,  mMovieTitle);

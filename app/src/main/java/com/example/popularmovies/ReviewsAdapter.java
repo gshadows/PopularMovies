@@ -17,7 +17,7 @@ import com.example.popularmovies.themoviedb.TmdbReview;
 public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHolder> {
   //private static final String TAG = Options.XTAG + ReviewsAdapter.class.getSimpleName();
   
-  public interface OnClickListener { void onClick (int item); }
+  public interface OnClickListener { void onReviewClick (int item); }
   
   private final Context mContext;
   private final OnClickListener mClickListener;
@@ -106,7 +106,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
     public void onClick (View view) {
       int position = getAdapterPosition();
       if (position < 0) return; // Too late, clicked element already destroyed.
-      mClickListener.onClick(position);
+      mClickListener.onReviewClick(position);
     }
   }
 }

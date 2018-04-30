@@ -21,7 +21,7 @@ import com.squareup.picasso.Picasso;
 public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.ViewHolder> {
   private static final String TAG = Options.XTAG + VideosAdapter.class.getSimpleName();
   
-  public interface OnClickListener { void onClick (int item); }
+  public interface OnClickListener { void onVideoClick (int item); }
   
   private final Context mContext;
   private final OnClickListener mClickListener;
@@ -161,7 +161,7 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.ViewHolder
     public void onClick (View view) {
       int position = getAdapterPosition();
       if (position < 0) return; // Too late, clicked element already destroyed.
-      mClickListener.onClick(position);
+      mClickListener.onVideoClick(position);
     }
   }
 }
