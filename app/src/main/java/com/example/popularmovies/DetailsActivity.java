@@ -157,7 +157,6 @@ public class DetailsActivity extends AppCompatActivity
       int tabNumber = savedInstanceState.getInt(SAVED_KEY_CURRENT_TAB, 0);
       if ((tabNumber < 0) || (tabNumber >= Page.values().length)) tabNumber = 0;
       mCurrentTab = Page.values()[tabNumber];
-      Log.d(TAG, String.format("onSaveInstanceState() rev_pos = %d, vid_pos = %d, tab = %d", mSavedReviewsPosition, mSavedVideosPosition, mCurrentTab.ordinal()));
     }
     
     // RecyclerView setup.
@@ -231,7 +230,6 @@ public class DetailsActivity extends AppCompatActivity
       mPageDescription.setVisibility(View.INVISIBLE);
       mRecyclerView.setAdapter ((page == Page.REVIEWS) ? mReviewsAdapter : mVideosAdapter);
       mRecyclerView.scrollToPosition ((page == Page.REVIEWS) ? mSavedReviewsPosition : mSavedVideosPosition);
-      Log.d(TAG, String.format("updateTab() rv restored to %d", (page == Page.REVIEWS) ? mSavedReviewsPosition : mSavedVideosPosition));
       mRecyclerView.setVisibility(View.VISIBLE);
     }
   }
@@ -241,12 +239,10 @@ public class DetailsActivity extends AppCompatActivity
   public void onTabSelected (TabLayout.Tab tab) {
     if (mCurrentTab != Page.DESCRIPTION) {
       // Save currently visible RecyclerView's position.
-      Log.d(TAG, String.format("onTabSelected() before save: rev_pos = %d, vid_pos = %d", mSavedReviewsPosition, mSavedVideosPosition));
       int position = getRecyclerViewPosition();
       if (position != NO_POSITION) {
         if (mCurrentTab == Page.REVIEWS) mSavedReviewsPosition = position; else mSavedVideosPosition = position;
       }
-      Log.d(TAG, String.format("onTabSelected() after save: rev_pos = %d, vid_pos = %d", mSavedReviewsPosition, mSavedVideosPosition));
     }
     mCurrentTab = Page.values()[tab.getPosition()];
     updateTab(mCurrentTab);
@@ -548,7 +544,6 @@ public class DetailsActivity extends AppCompatActivity
   protected void onSaveInstanceState (Bundle outState) {
     super.onSaveInstanceState(outState);
     outState.putInt(SAVED_KEY_CURRENT_TAB, mCurrentTab.ordinal());
-    Log.d(TAG, String.format("onSaveInstanceState() before save: rev_pos = %d, vid_pos = %d", mSavedReviewsPosition, mSavedVideosPosition));
     if (mCurrentTab != Page.DESCRIPTION) {
       int position = getRecyclerViewPosition();
       if (mCurrentTab == Page.REVIEWS) {
@@ -559,7 +554,6 @@ public class DetailsActivity extends AppCompatActivity
       outState.putInt(SAVED_KEY_REVIEWS_POS, mSavedReviewsPosition);
       outState.putInt(SAVED_KEY_VIDEOS_POS, mSavedVideosPosition);
     }
-    Log.d(TAG, String.format("onSaveInstanceState() rev_pos = %d, vid_pos = %d, tab = %d", mSavedReviewsPosition, mSavedVideosPosition, mCurrentTab.ordinal()));
   }
   
   
