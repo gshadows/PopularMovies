@@ -9,6 +9,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 
+import java.util.Locale;
+
 
 /**
  * Simple TheMovieDB.com site API version 3 implementation.
@@ -28,6 +30,9 @@ public class Api3 {
   
   private String mApiKey;
   private RequestQueue mRequestQueue = null;
+  
+  private static final String userLanguage = Locale.getDefault().toString().replace('_', '-');
+  private static final String userRegion = Locale.getDefault().getCountry();
   
   
   /**
@@ -54,24 +59,24 @@ public class Api3 {
   @SuppressLint("DefaultLocale")
   public String getURL_PopularMovies (int page) {
     if ((page <= 0) || (page > 1000)) throw new IllegalArgumentException("Page outside 1..1000");
-    return String.format ("%s%s?api_key=%s&page=%d", DEFAULT_BASE_ADDRESS, REQ_MOVIES_POPULER, mApiKey, page);
+    return String.format ("%s%s?api_key=%s&language=%s&region=%s&page=%d", DEFAULT_BASE_ADDRESS, REQ_MOVIES_POPULER, mApiKey, userLanguage, userRegion, page);
   }
   @SuppressLint("DefaultLocale")
   public String getURL_TopRatedMovies (int page) {
     if ((page <= 0) || (page > 1000)) throw new IllegalArgumentException("Page outside 1..1000");
-    return String.format ("%s%s?api_key=%s&page=%d", DEFAULT_BASE_ADDRESS, REQ_MOVIES_TOP_RATED, mApiKey, page);
+    return String.format ("%s%s?api_key=%s&language=%s&region=%s&page=%d", DEFAULT_BASE_ADDRESS, REQ_MOVIES_TOP_RATED, mApiKey, userLanguage, userRegion, page);
   }
   @SuppressLint("DefaultLocale")
   public String getURL_MovieDetails (int movieId) {
-    return String.format ("%s%s/%d?api_key=%s", DEFAULT_BASE_ADDRESS, REQ_MOVIE_DETAILS, movieId, mApiKey);
+    return String.format ("%s%s/%d?api_key=%s&language=%s", DEFAULT_BASE_ADDRESS, REQ_MOVIE_DETAILS, movieId, mApiKey, userLanguage);
   }
   @SuppressLint("DefaultLocale")
   public String getURL_MovieReviews (int movieId, int page) {
-    return String.format ("%s%s/%d%s?api_key=%s&page=%d", DEFAULT_BASE_ADDRESS, REQ_MOVIE_DETAILS, movieId, SUB_MOVIE_REVIEWS, mApiKey, page);
+    return String.format ("%s%s/%d%s?api_key=%s&language=%s&page=%d", DEFAULT_BASE_ADDRESS, REQ_MOVIE_DETAILS, movieId, SUB_MOVIE_REVIEWS, mApiKey, "EN-us", page);
   }
   @SuppressLint("DefaultLocale")
   public String getURL_MovieVideos (int movieId, int page) {
-    return String.format ("%s%s/%d%s?api_key=%s&page=%d", DEFAULT_BASE_ADDRESS, REQ_MOVIE_DETAILS, movieId, SUB_MOVIE_VIDEOS, mApiKey, page);
+    return String.format ("%s%s/%d%s?api_key=%s&language=%s&page=%d", DEFAULT_BASE_ADDRESS, REQ_MOVIE_DETAILS, movieId, SUB_MOVIE_VIDEOS, mApiKey, "EN-us", page);
   }
   
   
