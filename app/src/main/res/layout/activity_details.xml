@@ -8,28 +8,20 @@
   android:layout_height="match_parent"
   >
 
-  <!--android.support.v4.widget.SwipeRefreshLayout
+  <android.support.v4.widget.SwipeRefreshLayout
     android:id="@+id/details_swipe_layout"
     android:layout_width="0dp"
-    android:layout_height="0dp"
+    android:layout_height="@dimen/detail_head_vertical_size"
 
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintLeft_toLeftOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintRight_toRightOf="parent"
     app:layout_constraintTop_toTopOf="parent"
-    -->
-    <LinearLayout
-      android:id="@+id/details_swipe_layout"
-      android:layout_width="0dp"
-      android:layout_height="0dp"
-
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintLeft_toLeftOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintRight_toRightOf="parent"
-      app:layout_constraintTop_toTopOf="parent"
-      android:orientation="vertical"
+    >
+    <FrameLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
       >
       <ImageView
         android:id="@+id/back_image_iv"
@@ -39,7 +31,7 @@
         android:layout_margin="0dp"
       
         android:background="@null"
-        android:visibility="visible"
+        android:visibility="gone"
         />
     
       <TextView
@@ -59,8 +51,8 @@
       
         tools:text="Nightmare on Elm Street"
         />
-    </LinearLayout>
-  <!--/android.support.v4.widget.SwipeRefreshLayout-->
+    </FrameLayout>
+  </android.support.v4.widget.SwipeRefreshLayout>
   
   <ImageView
     android:id="@+id/star_button"
