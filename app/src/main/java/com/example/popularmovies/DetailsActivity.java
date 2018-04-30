@@ -8,8 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
-import android.support.constraint.ConstraintLayout;
-import android.support.constraint.ConstraintSet;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -49,7 +47,8 @@ public class DetailsActivity extends AppCompatActivity
   public static final String TAG = Options.XTAG + DetailsActivity.class.getSimpleName();
   
   // Saved instance state keys.
-  private static final String SAVED_KEY_POSITION    = "pos";
+  private static final String SAVED_KEY_REVIEWS_POS = "rev_pos";
+  private static final String SAVED_KEY_VIDEOS_POS  = "vid_pos";
   private static final String SAVED_KEY_CURRENT_TAB = "cur_tab";
   
   // Intent extras keys.
@@ -93,7 +92,8 @@ public class DetailsActivity extends AppCompatActivity
   
   private Page mCurrentTab = Page.DESCRIPTION;
   private boolean mIsLandscape;
-  private int mSavedPosition = NO_POSITION;  // Saved RecyclerView's position.
+  private int mSavedReviewsPosition = NO_POSITION;  // Saved RecyclerView's position.
+  private int mSavedVideosPosition  = NO_POSITION;  // Saved RecyclerView's position.
   
   ReviewsAdapter mReviewsAdapter;
   VideosAdapter  mVideosAdapter;
@@ -151,12 +151,13 @@ public class DetailsActivity extends AppCompatActivity
     // Restore saved activity state.
     if (savedInstanceState != null) {
       // RecyclerView position.
-      mSavedPosition = savedInstanceState.getInt(SAVED_KEY_POSITION, NO_POSITION);
+      mSavedReviewsPosition = savedInstanceState.getInt(SAVED_KEY_REVIEWS_POS, NO_POSITION);
+      mSavedVideosPosition  = savedInstanceState.getInt(SAVED_KEY_VIDEOS_POS,  NO_POSITION);
       // Displayed tab.
       int tabNumber = savedInstanceState.getInt(SAVED_KEY_CURRENT_TAB, 0);
       if ((tabNumber < 0) || (tabNumber >= Page.values().length)) tabNumber = 0;
       mCurrentTab = Page.values()[tabNumber];
-      Log.d(TAG, String.format("onCreate() restore state: rv_pos = %d, tab = %d", mSavedPosition, mCurrentTab.ordinal()));
+      Log.d(TAG, String.format("onSaveInstanceState() rev_pos = %d, vid_pos = %d, tab = %d", mSavedReviewsPosition, mSavedVideosPosition, mCurrentTab.ordinal()));
     }
     
     // RecyclerView setup.
@@ -187,6 +188,40 @@ public class DetailsActivity extends AppCompatActivity
   }
   
   
+  /* *
+   * SwipeRefreshLayout tries to use all available height when it is set to "wrap_content".
+   * On the other hand, when it set to "0dp" it ends with zero height regardless of contents size.
+   * This method captures one of the inner views size change to re-calculate SwipeRefreshLayout
+   * height manually. Unfortunately I haven't found better solution.
+   * (no problem if using FrameLayout instead of SwipeRefreshLayout).
+   * 
+   * @param view inner view that expected to change size of SwipeRefreshLayout.
+   */
+  /*private void fixSwipeRefreshLayoutHeight (final View view) {
+    // Add view's layout process finish event listener.
+    Log.d(TAG, "fixSwipeRefreshLayoutHeight() for " + view.getClass().getSimpleName());
+    view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+      @Override public void onGlobalLayout() {
+        // We need SwipeRefreshLayout's height to fit tallest of both views.
+        final int titleHeight = mTitleTV.getHeight();
+        final int backHeight = mBackgroundIV.getHeight();
+        Log.d(TAG, String.format("fixSwipeRefreshLayoutHeight() for %s, onGlobalLayout() size: title %d (meas %d), bg %d (meas %d)", view.getClass().getSimpleName(), titleHeight, mTitleTV.getMeasuredHeight(), backHeight, mBackgroundIV.getMeasuredHeight()));
+        Log.d(TAG, String.format("Height before: %d, meas %d", mSwipeRL.getHeight(), mSwipeRL.getMeasuredHeight()));
+        
+        mSwipeRL.setMinimumHeight((titleHeight > backHeight) ? titleHeight : backHeight);
+        
+        Log.d(TAG, String.format("Height after: %d, meas %d", mSwipeRL.getHeight(), mSwipeRL.getMeasuredHeight()));
+        // Remove listener. It is one-time action :)
+        if(Build.VERSION.SDK_INT < 16){
+          view.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+        }else{
+          view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+        }
+      }
+    });
+  }*/
+  
+  
   private void updateTab (Page page) {
     if (page != mCurrentTab) return; // Do not update invisible tabs.
     if (page == Page.DESCRIPTION) {
@@ -195,6 +230,8 @@ public class DetailsActivity extends AppCompatActivity
     } else {
       mPageDescription.setVisibility(View.INVISIBLE);
       mRecyclerView.setAdapter ((page == Page.REVIEWS) ? mReviewsAdapter : mVideosAdapter);
+      mRecyclerView.scrollToPosition ((page == Page.REVIEWS) ? mSavedReviewsPosition : mSavedVideosPosition);
+      Log.d(TAG, String.format("updateTab() rv restored to %d", (page == Page.REVIEWS) ? mSavedReviewsPosition : mSavedVideosPosition));
       mRecyclerView.setVisibility(View.VISIBLE);
     }
   }
@@ -202,8 +239,16 @@ public class DetailsActivity extends AppCompatActivity
   
   @Override
   public void onTabSelected (TabLayout.Tab tab) {
+    if (mCurrentTab != Page.DESCRIPTION) {
+      // Save currently visible RecyclerView's position.
+      Log.d(TAG, String.format("onTabSelected() before save: rev_pos = %d, vid_pos = %d", mSavedReviewsPosition, mSavedVideosPosition));
+      int position = getRecyclerViewPosition();
+      if (position != NO_POSITION) {
+        if (mCurrentTab == Page.REVIEWS) mSavedReviewsPosition = position; else mSavedVideosPosition = position;
+      }
+      Log.d(TAG, String.format("onTabSelected() after save: rev_pos = %d, vid_pos = %d", mSavedReviewsPosition, mSavedVideosPosition));
+    }
     mCurrentTab = Page.values()[tab.getPosition()];
-    Log.d(TAG, "onTabSelected() - " + mCurrentTab.ordinal());
     updateTab(mCurrentTab);
   }
   
@@ -214,8 +259,8 @@ public class DetailsActivity extends AppCompatActivity
   private void updateStarButton() {
     mStarIV.setImageResource(mIsFavorite ? android.R.drawable.btn_star_big_on : android.R.drawable.btn_star_big_off);
   }
-
-
+  
+  
   @Override
   protected void onStop () {
     super.onStop();
@@ -243,6 +288,7 @@ public class DetailsActivity extends AppCompatActivity
     mReviewsRequest = api3.requireMovieReviews(mMovieInfo.id, mCurrentReviewsPage, new Response.Listener<TmdbReviewsPage>() {
       @Override public void onResponse (TmdbReviewsPage response) {
         mReviewsAdapter.setReviews(response.results);
+        if (mSavedReviewsPosition == NO_POSITION) mSavedReviewsPosition = 0;
         updateTab(Page.REVIEWS);
       }
     }, this);
@@ -251,6 +297,7 @@ public class DetailsActivity extends AppCompatActivity
     mVideosRequest = api3.requireMovieVideos(mMovieInfo.id, mCurrentVideosPage, new Response.Listener<TmdbVideosPage>() {
       @Override public void onResponse (TmdbVideosPage response) {
         mVideosAdapter.setVideos(response.results);
+        if (mSavedVideosPosition == NO_POSITION) mSavedVideosPosition = 0;
         updateTab(Page.VIDEOS);
       }
     }, this);
@@ -307,6 +354,7 @@ public class DetailsActivity extends AppCompatActivity
   
     setTitle(title);
     mTitleTV.setText(title);
+    //if (!mIsLandscape) fixSwipeRefreshLayoutHeight(mTitleTV); // Recalculate SwipeRefreshLayout height.
     
     // Show original title only if exists and differs from localized one.
     if ((mMovieInfo.original_title != null) && !title.equals(mMovieInfo.original_title)) {
@@ -317,7 +365,7 @@ public class DetailsActivity extends AppCompatActivity
     }
   }
 
-
+  
   /**
    * Show minimal movie information that is accessible immediately from the intent.
    */
@@ -337,7 +385,7 @@ public class DetailsActivity extends AppCompatActivity
       Picasso.with(this)
         .load(imagePathBG)
         .into(mBackgroundIV, new com.squareup.picasso.Callback() {
-          @Override public void onSuccess () {
+          @Override public void onSuccess() {
             // When no background loaded (in case of network error or absence of image) empty
             // background looks ugly with a large gap between top of the screen and a title.
             // This why I bind title to the top of screen initially and background image are invisible.
@@ -346,8 +394,7 @@ public class DetailsActivity extends AppCompatActivity
             // success looks bad in case of slow internet (or none). Sorry for long comment :)
   
             // Enable background.
-            Log.d(TAG, "Background loaded successfully!");
-            mBackgroundIV.setVisibility(View.VISIBLE);
+            /*mBackgroundIV.setVisibility(View.VISIBLE);
             if (!mIsLandscape) {
               // Re-bind title text to the bottom of background image. Only for portrait orientation.
               ConstraintLayout layout = findViewById(R.id.details_c_layout);
@@ -356,12 +403,11 @@ public class DetailsActivity extends AppCompatActivity
               constraints.connect(R.id.title_tv, ConstraintSet.BOTTOM, R.id.back_image_iv, ConstraintSet.BOTTOM);
               constraints.clear(R.id.title_tv, ConstraintSet.TOP);
               constraints.applyTo(layout);
-            }
+              //fixSwipeRefreshLayoutHeight(mBackgroundIV); // Recalculate SwipeRefreshLayout height.
+            }*/
           }
   
-          @Override public void onError () {
-            Log.e(TAG, "Failed to load background!");
-          } // When no background loaded title is bound to the top of screen.
+          @Override public void onError() { Log.e(TAG, "Failed to load background!"); } // When no background loaded title is bound to the top of screen.
         });
     }
     
@@ -374,11 +420,10 @@ public class DetailsActivity extends AppCompatActivity
         .placeholder(android.R.drawable.progress_indeterminate_horizontal)
         .error(android.R.drawable.stat_notify_error)
         .into(mPosterIV, new com.squareup.picasso.Callback() {
-          @Override public void onSuccess () {
-            Log.d(TAG, "Poster loaded successfully!");
+          @Override public void onSuccess() {
             mPosterIV.setContentDescription(getString(R.string.poster_content_description));
           }
-          @Override public void onError () {
+          @Override public void onError() {
             Log.e(TAG, "Failed to load poster!");
             mPosterIV.setColorFilter(Color.RED);
             mPosterIV.setContentDescription(getString(R.string.poster_error_content_description));
@@ -461,7 +506,6 @@ public class DetailsActivity extends AppCompatActivity
    */
   @Override
   public void onVideoClick (int item) {
-    Log.d(TAG,"Video click: " + item);
     String url = mVideosAdapter.getVideoURL(item);
     if (url == null) {
       Log.w(TAG, String.format("Video %d adapter of movie %d (%s) returned null video URI"));
@@ -483,7 +527,6 @@ public class DetailsActivity extends AppCompatActivity
    */
   @Override
   public void onReviewClick (int item) {
-    Log.d(TAG,"Review click: " + item);
     Intent intent = new Intent(this, ReadReviewActivity.class);
     TmdbReview review = mReviewsAdapter.getReview(item);
     intent.putExtra(ReadReviewActivity.EXTRA_TITLE,  mMovieInfo.title);
@@ -504,10 +547,19 @@ public class DetailsActivity extends AppCompatActivity
   @Override
   protected void onSaveInstanceState (Bundle outState) {
     super.onSaveInstanceState(outState);
-    if (mSavedPosition != NO_POSITION) mSavedPosition = getRecyclerViewPosition();
-    outState.putInt(SAVED_KEY_POSITION, mSavedPosition);
     outState.putInt(SAVED_KEY_CURRENT_TAB, mCurrentTab.ordinal());
-    Log.d(TAG, String.format("onSaveInstanceState() rv_pos = %d, tab = %d", mSavedPosition, mCurrentTab.ordinal()));
+    Log.d(TAG, String.format("onSaveInstanceState() before save: rev_pos = %d, vid_pos = %d", mSavedReviewsPosition, mSavedVideosPosition));
+    if (mCurrentTab != Page.DESCRIPTION) {
+      int position = getRecyclerViewPosition();
+      if (mCurrentTab == Page.REVIEWS) {
+        if (mSavedReviewsPosition != NO_POSITION) mSavedReviewsPosition = position;
+      } else {
+        if (mSavedVideosPosition != NO_POSITION) mSavedVideosPosition = position;
+      }
+      outState.putInt(SAVED_KEY_REVIEWS_POS, mSavedReviewsPosition);
+      outState.putInt(SAVED_KEY_VIDEOS_POS, mSavedVideosPosition);
+    }
+    Log.d(TAG, String.format("onSaveInstanceState() rev_pos = %d, vid_pos = %d, tab = %d", mSavedReviewsPosition, mSavedVideosPosition, mCurrentTab.ordinal()));
   }
   
   
