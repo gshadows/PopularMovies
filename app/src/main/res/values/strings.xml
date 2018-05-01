@@ -1,7 +1,7 @@
 <resources>
   
   <!-- Application -->
-  <string name="app_name">PopularMovies</string>
+  <string name="app_name" translatable="false">PopularMovies</string>
   
   <!-- Main menu -->
   <string name="top">TOP</string>
@@ -36,7 +36,6 @@
   <string name="videos">Videos</string>
   
   <!-- About activity -->
-  <string name="about_author">Developed by <a href="mailto:denis.v.andreev@yandex.ru">Denis Andreev</a>, 2018</string>
   <string name="about_udacity">This is a student\'s project at <a href="https://www.udacity.com/course/android-developer-nanodegree-by-google--nd801">Android Developer Nanodegree</a> course by <b>Udacity</b>.</string>
   <string name="about_tmdb">This product uses the <a href="https://developers.themoviedb.org/3/getting-started">TMDb API</a> but is not endorsed or certified by TMDb.</string>
   
@@ -47,8 +46,9 @@
   <string name="video_no_preview_content_description">No video preview available</string>
   
   <!-- Other strings -->
-  <string name="tmdb_url">https://www.themoviedb.org</string>
+  <string name="tmdb_url" translatable="false">https://www.themoviedb.org</string>
   <string name="remove_from_fav">Remove from favorites</string>
   <string name="add_to_fav">Add to favorites</string>
+  <string name="about_author">Developed by <a href="mailto:denis.v.andreev@yandex.ru">Denis Andreev</a>, 2018</string>
 
 </resources>

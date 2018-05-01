@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="refresh_big">ОБНОВИТЬ</string>
+  <string name="defaultStartTab">ИЗБРАННОЕ</string>
+  <string name="top">ТОП</string>
+  <string name="pop">ПОП</string>
+  <string name="fav">ИЗБР</string>
+  <string name="about">О программе</string>
+  <string name="top_rated">По рейтингу</string>
+  <string name="popular">Популярные</string>
+  <string name="favorites">Избранное</string>
+  <string name="fail_get_movies_list">Не удалось получить список фильмов с сервера</string>
+  <string name="popular_movies">Популярные Фильмы</string>
+  <string name="top_rated_movies">Фильмы по Рейтингу</string>
+  <string name="fail_get_movie_info">Не удалось получить информацию о фильме с сервера</string>
+  <string name="content_description_poster_preview">Предпросмотр постера</string>
+  <string name="year">Год:</string>
+  <string name="rate">Рейтинг:</string>
+  <string name="length">Время:</string>
+  <string name="minutes_short">мин</string>
+  <string name="reviews">Обзоры</string>
+  <string name="videos">Видео</string>
+  <string name="about_author">Разработал <a href="mailto:denis.v.andreev@yandex.ru">Денис Андреев</a>, 2018</string>
+  <string name="about_udacity">Это студенческий проект для курса <a href="https://www.udacity.com/course/android-developer-nanodegree-by-google--nd801">Android Developer Nanodegree</a> от <b>Udacity</b>.</string>
+  <string name="about_tmdb">Этот продукт использует <a href="https://developers.themoviedb.org/3/getting-started">TMDb API</a>, но не был ни одобрен ни сертифицирован TMDb.</string>
+  <string name="poster_content_description">Постер</string>
+  <string name="poster_error_content_description">Ошибка загрузки постера</string>
+  <string name="video_preview_content_description">Предпросмотр видео</string>
+  <string name="video_no_preview_content_description">Предпросмотр видео не доступен</string>
+  <string name="remove_from_fav">Убрать из избранного</string>
+  <string name="add_to_fav">Добавить в избранное</string>
+  <string name="summary">Описание</string>
+</resources>
